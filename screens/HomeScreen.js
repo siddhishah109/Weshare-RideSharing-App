@@ -1,24 +1,45 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, Image } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, Modal, TextInput, TouchableWithoutFeedback, Dimensions } from 'react-native';
+import TopAppBar from '../components/TopAppBar';
 
 const HomeScreen = ({ navigation }) => {
   const [selectedButton, setSelectedButton] = useState('auto');
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [textInputValue1, setTextInputValue1] = useState('');
+  const [textInputValue2, setTextInputValue2] = useState('');
 
+  const openDrawer = () => {
+    setIsDrawerOpen(true);
+  };
+
+  const closeDrawer = () => {
+    setIsDrawerOpen(false);
+  };
+
+  const handleBackdropPress = (event) => {
+    const { locationY } = event.nativeEvent;
+    const drawerContentHeight = 400; 
+    const boundary = Dimensions.get('window').height - drawerContentHeight;
+    if (locationY > boundary) {
+      closeDrawer();
+    }
+  };
+  
   const handlePress = (button) => {
     setSelectedButton(button);
+  };
+  const handleInputChange1 = (text) => {
+    setTextInputValue1(text);
+  };
+
+  const handleInputChange2 = (text) => {
+    setTextInputValue2(text);
   };
 
   return (
     <View style={styles.container}>
       {/* Header */}
-      <View style={styles.header}>
-        <TouchableOpacity>
-          <Image source={require('../asset/icons/Menui.png')} style={styles.icon} />
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <Image source={require('../asset/icons/Notificationi.png')} style={styles.icon} />
-        </TouchableOpacity>
-      </View>
+      <TopAppBar/>
 
       {/* Main Content */}
       <View style={styles.content}>
@@ -38,11 +59,55 @@ const HomeScreen = ({ navigation }) => {
               </View>
             </TouchableOpacity>
           </View>
-          <View style={styles.question}>
-            <Text>Where would you like to go?</Text>
-          </View>
+          <TouchableOpacity onPress={openDrawer}>
+            <View style={styles.question}>
+              <Text>Where would you like to go?</Text>
+            </View>
+          </TouchableOpacity>
         </View>
       </View>
+
+
+      <Modal
+         animationType="none"
+        transparent={true}
+        visible={isDrawerOpen}
+        onRequestClose={closeDrawer}
+      >
+        <TouchableWithoutFeedback onPress={(event) => handleBackdropPress(event)}>
+          <View style={styles.modalContainer}>
+            <View style={styles.drawer}>
+              <TouchableOpacity onPress={closeDrawer}>
+                <Text>Close</Text>
+              </TouchableOpacity>
+              <View style={styles.texts}>
+                <Text style={styles.textsa} >Select Address</Text>
+              </View>
+              <View style={styles.blc}>
+              <TextInput
+                style={styles.input}
+                value={textInputValue1}
+                onChangeText={handleInputChange1}
+                placeholder="From"
+              />
+              <TextInput
+                style={styles.input}
+                value={textInputValue2}
+                onChangeText={handleInputChange2}
+                placeholder="To"
+              />
+              <TouchableOpacity onPress={closeDrawer}>
+              <View style={styles.q}>
+              <Text>Done</Text>
+            </View>
+              </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </TouchableWithoutFeedback>
+      </Modal>
+
+
     </View>
   );
 };
@@ -50,17 +115,6 @@ const HomeScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 20,
-    borderBottomWidth: 0,
-  },
-  icon: {
-    width: 34,
-    height: 34,
   },
   content: {
     flex: 1,
@@ -139,6 +193,50 @@ const styles = StyleSheet.create({
     backgroundColor: '#E2F5ED',
     borderBlockColor: '#008955',
     borderWidth: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  drawer: {
+    backgroundColor: 'white',
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    padding: 20,
+    height: 400,
+  },
+  texts:{
+    height: 30,
+    borderBottomWidth: 0.5,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 20,
+  },
+  textsa:{
+    fontSize: 20,
+    fontFamily: 'sans-serif',
+  },
+  input:{
+    height: 50,
+    width: 340,
+    margin: 12,
+    borderWidth: 1,
+    padding: 10,
+    borderRadius: 10,
+  },
+  q:{
+    height: 50,
+    width: 100,
+    borderRadius: 10,
+    backgroundColor: '#008955',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  blc:{
+    display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
   }
