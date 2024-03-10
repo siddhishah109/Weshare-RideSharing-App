@@ -1,97 +1,14 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import { StyleSheet, View, Text, Button } from 'react-native';
 
-const GroupScreen = ({ navigation }) => {
-  const [groups] = useState([
-    { id: 1, name: 'Group 1', details: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.', image: require('../asset/auto.png') },
-    { id: 2, name: 'Group 2', details: 'Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.', image: require('../asset/auto.png') },
-    { id: 3, name: 'Group 3', details: 'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.', image: require('../asset/auto.png') }
-  ]);
+import React from 'react'
 
-  const handleGroupClick = (groupId) => {
-    // Handle navigation or any other action
-    console.log(`Clicked on Group ${groupId}`);
-  };
-
+const HistoryScreen = () => {
   return (
-    <View style={styles.container}>
-      <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-        <Text style={styles.backButtonText}>{'< Back'}</Text>
-      </TouchableOpacity>
-      <Text style={styles.heading}>Available Groups for Ride</Text>
-      {groups.map(group => (
-        <TouchableOpacity key={group.id} onPress={() => handleGroupClick(group.id)}>
-          <View style={styles.group}>
-            <Text style={styles.groupName}>{group.name}</Text>
-            <Text>{group.details}</Text>
-            <Image source={group.image} style={styles.groupImage} />
-            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('GroupDetails', { groupId: group.id })}>
-              <Text style={styles.buttonText}>View Group</Text>
-            </TouchableOpacity>
-          </View>
-        </TouchableOpacity>
-      ))}
+    <View>
+        <Text>History</Text>
     </View>
-  );
-};
+  )
+}
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 10,
-    backgroundColor: 'white',
-  },
-  backButton: {
-    position: 'absolute',
-    top: 10,
-    left: 10,
-  },
-  backButtonText: {
-    fontSize: 16,
-    color: 'black',
-  },
-  heading: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 20,
-    alignSelf: 'flex-start',
-    marginLeft: 10,
-    marginTop: 30, // Adjusted for back button
-  },
-  group: {
-    padding: 10,
-    marginBottom: 20,
-    borderWidth: 1,
-    borderColor: '#008955',
-    borderRadius: 10,
-    backgroundColor: '#E2F5ED',
-    position: 'relative', // Make it relative to allow absolute positioning of the image
-  },
-  groupName: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginBottom: 5,
-  },
-  groupImage: {
-    position: 'absolute',
-    top: 10,
-    right: 10,
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-  },
-  button: {
-    backgroundColor: '#008955',
-    padding: 10,
-    borderRadius: 5,
-    alignItems: 'center',
-    marginTop: 10,
-  },
-  buttonText: {
-    color: 'white',
-    fontWeight: 'bold',
-  },
-});
-
-export default GroupScreen;
+export default HistoryScreen
 
