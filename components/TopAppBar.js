@@ -4,12 +4,15 @@ import { StyleSheet } from 'react-native';
 
 
 const TopAppBar = ({ navigation }) => {
+  const handelBell = () => {
+    navigation.navigate('NotificationScreen');
+  };
   return (
     <View style={styles.header}>
       <TouchableOpacity>
         <Image source={require('../asset/icons/Menui.png')} style={styles.icon} />
       </TouchableOpacity>
-      <TouchableOpacity>
+      <TouchableOpacity onPress={handelBell}>
         <Image source={require('../asset/icons/Notificationi.png')} style={styles.icon2} />
       </TouchableOpacity>
     </View>
