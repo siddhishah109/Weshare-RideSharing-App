@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, Modal, TextInput, TouchableWithoutFeedback, Dimensions } from 'react-native';
-import TopAppBar from '../components/TopAppBar';
 
 const HomeScreen = ({ navigation }) => {
   const [selectedButton, setSelectedButton] = useState('auto');
@@ -41,8 +40,6 @@ const HomeScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      {/* Header */}
-      <TopAppBar/>
 
       {/* Main Content */}
       <View style={styles.content}>

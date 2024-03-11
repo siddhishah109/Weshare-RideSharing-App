@@ -3,14 +3,14 @@ import { View, TouchableOpacity, Image } from 'react-native';
 import { StyleSheet } from 'react-native';
 
 
-const TopAppBar = () => {
+const TopAppBar = ({ navigation }) => {
   return (
     <View style={styles.header}>
       <TouchableOpacity>
         <Image source={require('../asset/icons/Menui.png')} style={styles.icon} />
       </TouchableOpacity>
       <TouchableOpacity>
-        <Image source={require('../asset/icons/Notificationi.png')} style={styles.icon} />
+        <Image source={require('../asset/icons/Notificationi.png')} style={styles.icon2} />
       </TouchableOpacity>
     </View>
   );
@@ -22,12 +22,17 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     padding: 20,
-    borderTopWidth: 1,
-    borderTopColor: '#ccc',
+    height: 50,
+    width: '100%',
+    position: 'absolute',
+    backgroundColor: 'transparent !important',
   },
   icon: {
     width: 34,
     height: 34,
+  },
+  icon2: {
+    left: 0,
   },
 });
 
