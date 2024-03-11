@@ -10,6 +10,8 @@ import CreateAccountScreen from './screens/CreateAccountScreen';
 import ProfileScreen from './screens/ProfileScreen';
 import Tabs from './navigations/Tabs';
 import NotificationScreen from './screens/NotificationScreen';
+import GroupScreen from './screens/GroupFormation';
+import GroupSelectionScreen from './screens/GroupSelection';
 const Stack = createNativeStackNavigator();
  
 
@@ -42,6 +44,8 @@ export default function App() {
         <Stack.Screen name="CreateAccountScreen" component={CreateAccountScreen} options={{ headerShown: false }}/>
         <Stack.Screen name="ProfileScreen" component={ProfileScreen} options={{ headerShown: false }}/>
         <Stack.Screen name="NotificationScreen" component={NotificationScreen} options={{ headerShown: false }}/>
+        <Stack.Screen name="GroupScreen" component={GroupScreen} options={{ headerShown: false }}/>
+        <Stack.Screen name="GroupSelectionScreen" component={GroupSelectionScreen} options={{ headerShown: false }}/>
 
 
 

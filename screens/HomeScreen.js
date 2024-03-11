@@ -24,7 +24,10 @@ const HomeScreen = ({ navigation }) => {
       closeDrawer();
     }
   };
-  
+  const closeDrawerDone = () => { 
+    setIsDrawerOpen(false);
+    navigation.navigate('GroupScreen');
+  }
   const handlePress = (button) => {
     setSelectedButton(button);
   };
@@ -96,7 +99,7 @@ const HomeScreen = ({ navigation }) => {
                 onChangeText={handleInputChange2}
                 placeholder="To"
               />
-              <TouchableOpacity onPress={closeDrawer}>
+              <TouchableOpacity onPress={closeDrawerDone}>
               <View style={styles.q}>
               <Text>Done</Text>
             </View>
