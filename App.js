@@ -13,6 +13,7 @@ import NotificationScreen from './screens/NotificationScreen';
 import GroupScreen from './screens/GroupFormation';
 import GroupSelectionScreen from './screens/GroupSelection';
 import TopAppBar from './components/TopAppBar';
+import ThankyouScreen from './screens/ThankyouScreen';
 const Stack = createNativeStackNavigator();
  
 
@@ -47,7 +48,7 @@ export default function App() {
         <Stack.Screen name="NotificationScreen" component={NotificationScreen} options={{ headerShown: false }}/>
         <Stack.Screen name="GroupScreen" component={GroupScreen} options={{ headerShown: false }}/>
         <Stack.Screen name="GroupSelectionScreen" component={GroupSelectionScreen} options={{ headerShown: false }}/>
-
+        <Stack.Screen name="ThankyouScreen" component={ThankyouScreen} options={{ headerShown: false }}/>
 
 
      
