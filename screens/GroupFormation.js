@@ -25,7 +25,7 @@ const GroupScreen = ({ navigation }) => {
             <Text style={styles.groupName}>{group.name}</Text>
             <Text>{group.details}</Text>
             <Image source={group.image} style={styles.groupImage} />
-            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('GroupDetails', { groupId: group.id })}>
+            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('GroupSelectionScreen', { groupId: group.id })}>
               <Text style={styles.buttonText}>View Group</Text>
             </TouchableOpacity>
           </View>

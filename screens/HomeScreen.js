@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity, Modal, TextInput, TouchableWithoutFeedback, Dimensions } from 'react-native';
-import TopAppBar from '../components/TopAppBar';
 
 const HomeScreen = ({ navigation }) => {
   const [selectedButton, setSelectedButton] = useState('auto');
@@ -24,7 +23,10 @@ const HomeScreen = ({ navigation }) => {
       closeDrawer();
     }
   };
-  
+  const closeDrawerDone = () => { 
+    setIsDrawerOpen(false);
+    navigation.navigate('GroupScreen');
+  }
   const handlePress = (button) => {
     setSelectedButton(button);
   };
@@ -38,8 +40,6 @@ const HomeScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      {/* Header */}
-      <TopAppBar/>
 
       {/* Main Content */}
       <View style={styles.content}>
@@ -96,7 +96,7 @@ const HomeScreen = ({ navigation }) => {
                 onChangeText={handleInputChange2}
                 placeholder="To"
               />
-              <TouchableOpacity onPress={closeDrawer}>
+              <TouchableOpacity onPress={closeDrawerDone}>
               <View style={styles.q}>
               <Text>Done</Text>
             </View>

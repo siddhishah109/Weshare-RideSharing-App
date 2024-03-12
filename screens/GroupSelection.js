@@ -13,7 +13,10 @@ const GroupSelectionScreen = ({ navigation }) => {
     { id: 2, name: 'Member 2' },
     { id: 3, name: 'Member 3' }
   ]);
-
+  
+  const handelAccept = () => {
+    navigation.navigate('ThankyouScreen');
+  };
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
@@ -54,7 +57,7 @@ const GroupSelectionScreen = ({ navigation }) => {
         <TouchableOpacity style={[styles.button, styles.declineButton]}>
           <Text style={styles.buttonText}>Decline</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={[styles.button, styles.acceptButton]}>
+        <TouchableOpacity style={[styles.button, styles.acceptButton]} onPress={handelAccept}>
           <Text style={styles.buttonText}>Accept</Text>
         </TouchableOpacity>
       </View>
