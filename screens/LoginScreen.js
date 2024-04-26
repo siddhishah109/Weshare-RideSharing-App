@@ -10,6 +10,9 @@ const LoginScreen = ({ navigation }) => {
   const handellogin = () => {
     navigation.navigate('LoginScreen1');
   };
+  const handelRiderlogin = () => {
+    navigation.navigate('RiderLogin');
+  };
 
   return (
     <View style={styles.container}>
@@ -20,7 +23,11 @@ const LoginScreen = ({ navigation }) => {
           <Text style={styles.subtitle}>Have a better sharing experience</Text>
         </View>
       </View>
-   
+      <TouchableOpacity onPress={handelRiderlogin} >
+      <View style={styles.button0}>
+        <Text style={styles.buttonText1}>Rider Log In</Text>
+      </View>
+    </TouchableOpacity>
       <TouchableOpacity onPress={handelAccount} >
       <View style={styles.button}>
         <Text style={styles.buttonText}>Create an account</Text>
@@ -89,7 +96,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 10, 
-        bottom: 100,
+        bottom: 80,
       },
       buttonText: {
         color: 'white',
@@ -106,7 +113,20 @@ const styles = StyleSheet.create({
         borderRadius: 10, 
         borderColor: '#008955',
         borderWidth: 1.5,
-        bottom: 70,
+        bottom: 60,
+      },
+      button0:{
+        backgroundColor: '#fff',
+        width: '100%',
+        paddingLeft: 100,
+        paddingRight: 110,
+        height: 50, 
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 10, 
+        borderColor: '#008955',
+        borderWidth: 1.5,
+        bottom: 95,
       },
       buttonText1: {
         color: '#008955',

@@ -24,7 +24,7 @@ const CreateAccountScreen = ({ navigation }) => {
         <Text style={styles.backButtonText}>{'< Back'}</Text>
       </TouchableOpacity>
       <View style={{ height: 20 }} />
-      <Text style={styles.title}>Sign up with your email or phone number</Text>
+      <Text style={styles.title}>Create Account</Text>
       <TextInput
         style={styles.input}
         placeholder="Name"
@@ -157,7 +157,10 @@ const styles = StyleSheet.create({
   },
   checkboxLabel: {
     fontSize: 16,
-    color:'#008955'
+    color:'#008955',
+    display: 'flex',
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start',
   },
   button: {
     width: '100%',
@@ -219,6 +222,7 @@ const styles = StyleSheet.create({
   signInText: {
     color: '#008955',
     fontSize: 16,
+    textAlign: 'center',
   },
   accountText:{
     fontSize: 16,

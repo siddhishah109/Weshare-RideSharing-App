@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, Modal, TextInput, TouchableWithoutFeedback, Dimensions } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, Modal, TextInput,Image, TouchableWithoutFeedback, Dimensions } from 'react-native';
+import MapScreen from './MapScreen';
 
 const HomeScreen = ({ navigation }) => {
   const [selectedButton, setSelectedButton] = useState('auto');
@@ -42,6 +43,7 @@ const HomeScreen = ({ navigation }) => {
     <View style={styles.container}>
 
       {/* Main Content */}
+      <MapScreen />
       <View style={styles.content}>
         <View style={styles.preferences}>
           <Text style={styles.ptext}>Preferences </Text>
@@ -50,18 +52,19 @@ const HomeScreen = ({ navigation }) => {
           <View style={styles.acbutton}>
             <TouchableOpacity onPress={() => handlePress('auto')}>
               <View style={[styles.abutton, selectedButton === 'auto' ? styles.selectedButtonAuto : styles.unselectedButton]}>
-                <Text>Auto</Text>
+                <Text style={[selectedButton === 'auto' ? styles.tx : styles.unselectedtx]}>Auto</Text>
               </View>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => handlePress('cab')}>
               <View style={[styles.cbutton, selectedButton === 'cab' ? styles.selectedButtonCab : styles.unselectedButton]}>
-                <Text>Cab</Text>
+                <Text style={[selectedButton === 'cab' ? styles.tx : styles.unselectedtx]}>Cab</Text>
               </View>
             </TouchableOpacity>
           </View>
           <TouchableOpacity onPress={openDrawer}>
             <View style={styles.question}>
-              <Text>Where would you like to go?</Text>
+              <Image source={require('../asset/icons/i1.jpg')}style={{height: 30, width: 30, marginRight: 10}} />
+              <Text style={styles.where}>Where would you like to go?</Text>
             </View>
           </TouchableOpacity>
         </View>
@@ -81,6 +84,7 @@ const HomeScreen = ({ navigation }) => {
                 <Text>Close</Text>
               </TouchableOpacity>
               <View style={styles.texts}>
+              <Image source={require('../asset/icons/i2.png')}style={{height: 30, width: 20, marginRight:20,}} />
                 <Text style={styles.textsa} >Select Address</Text>
               </View>
               <View style={styles.blc}>
@@ -90,6 +94,7 @@ const HomeScreen = ({ navigation }) => {
                 onChangeText={handleInputChange1}
                 placeholder="From"
               />
+               
               <TextInput
                 style={styles.input}
                 value={textInputValue2}
@@ -98,7 +103,7 @@ const HomeScreen = ({ navigation }) => {
               />
               <TouchableOpacity onPress={closeDrawerDone}>
               <View style={styles.q}>
-              <Text>Done</Text>
+              <Text style={styles.ptext}>Done</Text>
             </View>
               </TouchableOpacity>
               </View>
@@ -116,17 +121,26 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  where:{
+    color: '#008955',
+    fontSize: 15,
+    fontWeight: 'bold',
+  },
   content: {
     flex: 1,
+    position: 'absolute',
     justifyContent: 'center',
     alignItems: 'center',
+    zIndex: 2,
+    backgroundColor: 'transparent',
+    bottom: 10,
   },
   preferences: {
-    height: 60,
-    width: 200,
+    height: 50,
+    width: 170,
     borderRadius: 10,
     position: 'absolute',
-    bottom: 300,
+    bottom: 290,
     left: 20,
     display: 'flex',
     alignItems: 'center',
@@ -135,7 +149,8 @@ const styles = StyleSheet.create({
   },
   ptext: {
     color: 'white',
-    fontSize: 20,
+    fontSize: 18,
+fontWeight: 'bold',
   },
   pbox: {
     height: 160,
@@ -190,6 +205,8 @@ const styles = StyleSheet.create({
     height: 50,
     width: 300,
     borderRadius: 10,
+    display: 'flex',
+    flexDirection: 'row',
     backgroundColor: '#E2F5ED',
     borderBlockColor: '#008955',
     borderWidth: 1,
@@ -209,15 +226,19 @@ const styles = StyleSheet.create({
     height: 400,
   },
   texts:{
-    height: 30,
+    height: 50,
     borderBottomWidth: 0.5,
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 20,
+    display: 'flex',
+    flexDirection: 'row',
   },
   textsa:{
     fontSize: 20,
     fontFamily: 'sans-serif',
+fontWeight: 'bold',
+    color: 'black'
   },
   input:{
     height: 50,
@@ -229,7 +250,8 @@ const styles = StyleSheet.create({
   },
   q:{
     height: 50,
-    width: 100,
+    width: 230,
+    marginTop: 10,
     borderRadius: 10,
     backgroundColor: '#008955',
     alignItems: 'center',
@@ -239,6 +261,17 @@ const styles = StyleSheet.create({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+},
+  tx:{
+    color:'white',
+    fontWeight:'bold',  
+    fontSize: 15,
+
+},
+  unselectedtx:{
+    color:'#008955',
+    fontWeight:'bold',  
+    fontSize: 15,
   }
 });
 

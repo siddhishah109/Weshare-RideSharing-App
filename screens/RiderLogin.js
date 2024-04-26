@@ -2,7 +2,7 @@ import React from 'react';
 import { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image } from 'react-native';
 
-const LoginScreen1 = ({ navigation }) => {
+const RiderLogin = ({ navigation }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
@@ -11,7 +11,7 @@ const LoginScreen1 = ({ navigation }) => {
       alert('Please enter username and password');
       return;
     }
-    navigation.navigate("HomeTabs");
+    navigation.navigate("RiderScreen");
     console.log('Login button pressed');
   };
 
@@ -20,7 +20,7 @@ const LoginScreen1 = ({ navigation }) => {
       <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
         <Text style={styles.backButtonText}>{'< Back'}</Text>
       </TouchableOpacity>
-      <Text style={styles.title}>Log In</Text>
+      <Text style={styles.title}>Rider Log In</Text>
       <TextInput
         style={styles.input}
         placeholder="Username"
@@ -160,7 +160,9 @@ const styles = StyleSheet.create({
   signInText: {
     color: '#008955',
     fontSize: 16,
+    alignItems: 'center',
     textAlign: 'center',
+
   },
   accountText:{
     fontSize: 16,
@@ -168,5 +170,5 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LoginScreen1;
+export default RiderLogin;
 

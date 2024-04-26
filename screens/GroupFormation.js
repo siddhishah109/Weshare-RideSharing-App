@@ -3,9 +3,9 @@ import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 
 const GroupScreen = ({ navigation }) => {
   const [groups] = useState([
-    { id: 1, name: 'Group 1', details: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.', image: require('../asset/auto.png') },
-    { id: 2, name: 'Group 2', details: 'Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.', image: require('../asset/auto.png') },
-    { id: 3, name: 'Group 3', details: 'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.', image: require('../asset/auto.png') }
+    { id: 1, name: 'Group 1', details: 'Ishika Jain, Rohan Shah, Krishi Shah ', image: require('../asset/auto.png') },
+    { id: 2, name: 'Group 2', details: 'Ishika Jain, Deep Metha , Khushi Joshi', image: require('../asset/auto.png') },
+    { id: 3, name: 'Group 3', details: 'Ishika Jain, Bhuvan Jain, Khushi Joshi', image: require('../asset/auto.png') }
   ]);
 
   const handleGroupClick = (groupId) => {
