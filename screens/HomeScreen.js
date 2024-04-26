@@ -28,6 +28,9 @@ const HomeScreen = ({ navigation }) => {
     setIsDrawerOpen(false);
     navigation.navigate('GroupScreen');
   }
+  const preferences =()=>{
+    navigation.navigate('PreferenceScreen');
+  }
   const handlePress = (button) => {
     setSelectedButton(button);
   };
@@ -45,9 +48,12 @@ const HomeScreen = ({ navigation }) => {
       {/* Main Content */}
       <MapScreen />
       <View style={styles.content}>
-        <View style={styles.preferences}>
+        <TouchableOpacity onPress={preferences}>
+        <View style={styles.preferences} >
           <Text style={styles.ptext}>Preferences </Text>
         </View>
+        </TouchableOpacity>
+       
         <View style={styles.pbox}>
           <View style={styles.acbutton}>
             <TouchableOpacity onPress={() => handlePress('auto')}>

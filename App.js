@@ -16,6 +16,7 @@ import TopAppBar from './components/TopAppBar';
 import ThankyouScreen from './screens/ThankyouScreen';
 import RiderLogin from './screens/RiderLogin';
 import RiderScreen from './screens/RiderScreen';
+import PreferenceScreen from './screens/PreferenceScreen';
 const Stack = createNativeStackNavigator();
  
 
@@ -52,6 +53,7 @@ export default function App() {
         <Stack.Screen name="GroupSelectionScreen" component={GroupSelectionScreen} options={{ headerShown: false }}/>
         <Stack.Screen name="ThankyouScreen" component={ThankyouScreen} options={{ headerShown: false }}/>
         <Stack.Screen name="RiderLogin" component={RiderLogin} options={{ headerShown: false }}/>
+        <Stack.Screen name="PreferenceScreen" component={PreferenceScreen} options={{headerShown: false }}/>
         <Stack.Screen name="RiderScreen" component={RiderScreen} options={{ header: (props) => <TopAppBar {...props} />}}/>
      
       </Stack.Navigator>

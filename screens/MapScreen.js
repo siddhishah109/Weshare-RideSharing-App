@@ -1,27 +1,42 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, StyleSheet } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
+import Geolocation from '@react-native-community/geolocation';
 
 const MapScreen = () => {
+    const [region, setRegion] = useState(null);
+
+    useEffect(() => {
+        // Fetch user's current location
+        Geolocation.getCurrentPosition(
+            position => {
+                const { latitude, longitude } = position.coords;
+                setRegion({
+                    latitude,
+                    longitude,
+                    latitudeDelta: 0.06,
+                    longitudeDelta: 0.06,
+                });
+            },
+            error => console.error(error),
+            { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
+        );
+    }, []);
+
     return (
         <View style={styles.container}>
             <MapView
-                
                 style={styles.map}
                 provider={MapView.PROVIDER_GOOGLE} 
-                region={{
-                    latitude: 19.1074, 
-                    longitude: 72.8372, 
-                    latitudeDelta: 0.06,
-                    longitudeDelta: 0.06,
-                }}
+                region={region}
                 showsUserLocation={true} 
             >
-                <Marker
-                    coordinate={{ latitude: 19.1074, longitude: 72.8372 }}
-                    title="You are here"
-                    
-                />
+                {region && (
+                    <Marker
+                        coordinate={{ latitude: region.latitude, longitude: region.longitude }}
+                        title="You are here"
+                    />
+                )}
             </MapView>
         </View>
     );
@@ -33,8 +48,6 @@ const styles = StyleSheet.create({
     },
     map: {
         flex: 1,
-        height: '100vh',
-        zIndex: 0,
     },
 });
 
