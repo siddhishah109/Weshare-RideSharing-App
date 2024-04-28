@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, Modal, TextInput,Image, TouchableWithoutFeedback, Dimensions } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity,Switch, Modal, TextInput,Image ,TouchableWithoutFeedback, Dimensions } from 'react-native';
 import MapScreen from './MapScreen';
-
+import Geolocation from '@react-native-community/geolocation';
 const HomeScreen = ({ navigation }) => {
   const [selectedButton, setSelectedButton] = useState('auto');
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [textInputValue1, setTextInputValue1] = useState('');
   const [textInputValue2, setTextInputValue2] = useState('');
-
+  const [useCurrentLocation, setUseCurrentLocation] = useState(false);
   const openDrawer = () => {
     setIsDrawerOpen(true);
   };
@@ -24,10 +24,50 @@ const HomeScreen = ({ navigation }) => {
       closeDrawer();
     }
   };
-  const closeDrawerDone = () => { 
+  const closeDrawerDone = () => {
     setIsDrawerOpen(false);
-    navigation.navigate('GroupScreen');
-  }
+    
+    let fromlatitudeNum, fromlongitudeNum;
+    if (useCurrentLocation) {
+      // Get current location using Geolocation API
+      const [tolatitude, tolongitude] = textInputValue2.split(',');
+      Geolocation.getCurrentPosition(
+        position => {
+          fromlatitudeNum = position.coords.latitude;
+          fromlongitudeNum = position.coords.longitude;
+          const tolatitudeNum = parseFloat(tolatitude.trim());
+          const tolongitudeNum = parseFloat(tolongitude.trim());
+          // Navigate to the RideMapScreen
+          navigation.navigate('RideMapScreen', {
+            fromlatitude: fromlatitudeNum,
+            fromlongitude: fromlongitudeNum,
+            tolatitude: tolatitudeNum,
+            tolongitude: tolongitudeNum,
+          });
+        },
+        error => console.error(error),
+        { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
+      );
+    } else {
+      // Split the input value by comma
+      const [fromlatitude, fromlongitude] = textInputValue1.split(',');
+      const [tolatitude, tolongitude] = textInputValue2.split(',');
+  
+      // Convert strings to numbers if needed
+      fromlatitudeNum = parseFloat(fromlatitude.trim());
+      fromlongitudeNum = parseFloat(fromlongitude.trim());
+      const tolatitudeNum = parseFloat(tolatitude.trim());
+      const tolongitudeNum = parseFloat(tolongitude.trim());
+  
+      // Navigate to the RideMapScreen
+      navigation.navigate('RideMapScreen', {
+        fromlatitude: fromlatitudeNum,
+        fromlongitude: fromlongitudeNum,
+        tolatitude: tolatitudeNum,
+        tolongitude: tolongitudeNum,
+      });
+    }
+  };
   const preferences =()=>{
     navigation.navigate('PreferenceScreen');
   }
@@ -100,7 +140,13 @@ const HomeScreen = ({ navigation }) => {
                 onChangeText={handleInputChange1}
                 placeholder="From"
               />
-               
+              <View style={styles.toggleContainer}>
+          <Text>Use Current Location</Text>
+          <Switch
+            value={useCurrentLocation}
+            onValueChange={(value) => setUseCurrentLocation(value)}
+          />
+        </View>
               <TextInput
                 style={styles.input}
                 value={textInputValue2}

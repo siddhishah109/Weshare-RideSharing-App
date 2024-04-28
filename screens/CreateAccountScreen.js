@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image ,Alert } from 'react-native';
+import axios from 'axios';
 
 const CreateAccountScreen = ({ navigation }) => {
   const [name, setName] = useState('');
@@ -9,15 +10,52 @@ const CreateAccountScreen = ({ navigation }) => {
   const [password2, setPassword2] = useState('');
   const [termsChecked, setTermsChecked] = useState(false);
 
-  const handleSignup = () => {
-    if (!name || !email || !phone || !password1 ||  !password2 || !termsChecked) {
-      alert('Please fill in all fields and accept terms and conditions');
+  const handleSignup = async () => {
+    console.log('Signup button pressed');
+    if (!name || !email || !phone || !password1 || !password2 || !termsChecked) {
+      Alert.alert('Error', 'Please fill in all fields and accept terms and conditions');
       return;
     }
-    navigation.navigate("LoginScreen1");
-    console.log('Signup button pressed');
-  };
 
+    if (password1 !== password2) {
+      Alert.alert('Error', 'Passwords do not match');
+      return;
+    }
+    console.log(name
+      )
+    
+    try {
+      const response = await axios.post('https://weshare-backend-3.onrender.com/register', {
+        name: name,
+        email: email,
+        phone: phone,
+        password: password1,
+      });
+
+      if (response.status === 201) {
+        // Registration successful
+        navigation.navigate("LoginScreen1");
+        console.log('Signup successful');
+      }
+      else if(response.status === 400){
+        Alert.alert('Error', 'Email already exists');
+      }
+
+       else {
+        console.log(response);
+        const responseData = response.data;
+        if (responseData && responseData.error) {
+          Alert.alert('Error', responseData.error);
+        } else {
+          Alert.alert('Error', 'Something went wrong. Please try again later.');
+        }
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      console.log(error.response);
+      Alert.alert('Error', 'Already user? Pls login');
+    }
+  };
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>

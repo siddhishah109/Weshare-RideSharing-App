@@ -5,7 +5,7 @@ import Geolocation from '@react-native-community/geolocation';
 
 const MapScreen = () => {
     const [region, setRegion] = useState(null);
-
+    console.log(region);
     useEffect(() => {
         // Fetch user's current location
         Geolocation.getCurrentPosition(
@@ -14,10 +14,11 @@ const MapScreen = () => {
                 setRegion({
                     latitude,
                     longitude,
-                    latitudeDelta: 0.06,
-                    longitudeDelta: 0.06,
+                    latitudeDelta: 0.0922,
+                    longitudeDelta:  0.0421,
                 });
             },
+            
             error => console.error(error),
             { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
         );

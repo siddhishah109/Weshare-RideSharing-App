@@ -1,18 +1,39 @@
 import React from 'react';
 import { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image ,Alert } from 'react-native';
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const LoginScreen1 = ({ navigation }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     if (!username || !password) {
-      alert('Please enter username and password');
+      Alert.alert('Error', 'Please enter username and password');
       return;
     }
-    navigation.navigate("HomeTabs");
-    console.log('Login button pressed');
+
+    try {
+      const response = await axios.post('https://weshare-backend-3.onrender.com/login', {
+        email: username, 
+        password,
+      });
+
+      if (response.status === 200) {
+        const userData = { username }; 
+        await AsyncStorage.setItem('userData', JSON.stringify(userData));
+        await AsyncStorage.setItem('loginTime', JSON.stringify(new Date().getTime()));
+        console.log('AsyncStorage', await AsyncStorage.getItem('userData'));
+        navigation.navigate("HomeTabs");
+        console.log('Login successful');
+      } else {
+        Alert.alert('Error', 'Invalid email or password');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      Alert.alert('Error', 'invalid');
+    }
   };
 
   return (
@@ -23,7 +44,7 @@ const LoginScreen1 = ({ navigation }) => {
       <Text style={styles.title}>Log In</Text>
       <TextInput
         style={styles.input}
-        placeholder="Username"
+        placeholder="Email"
         value={username}
         onChangeText={setUsername}
         autoCapitalize="none"
