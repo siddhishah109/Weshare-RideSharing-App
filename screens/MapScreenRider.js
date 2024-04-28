@@ -1,10 +1,33 @@
-import React from 'react';
-import { View, StyleSheet ,Image} from 'react-native';
+import React,{useState,useEffect} from 'react';
+import { View, StyleSheet ,Image ,ActivityIndicator} from 'react-native';
 import MapView, { Marker, Polygon } from 'react-native-maps';
-
+import axios from 'axios';
 const MapScreenRider = () => {
+    const [loading, setLoading] = useState(true);
+    const [locations, setLocations] = useState([]);
+        useEffect(() => {
+        const fetchLocations = async () => {
+            try {
+                const response = await axios.get('https://weshare-backend-3.onrender.com/ride-requests/locations');
+                setLocations(response.data); // Assuming the API returns an array of location objects [{ latitude, longitude }, ...]
+                console.log(response.data);
+                setLoading(false);
+            } catch (error) {
+                console.error('Error fetching locations:', error);
+                setLoading(false);
+            }
+        };
+
+        fetchLocations();
+    }, []);
+
     return (
         <View style={styles.container}>
+            {loading ? (
+                <View style={styles.loaderContainer}>
+                    <ActivityIndicator size="large" color="#008955" />
+                </View>
+            ) : (
             <MapView
                 style={styles.map}
                 provider={MapView.PROVIDER_GOOGLE}
@@ -16,28 +39,20 @@ const MapScreenRider = () => {
                 }}
                 showsUserLocation={true}
             >
-                <CircleMarker
-                    coordinate={{ latitude: 19.1094, longitude: 72.8342 }}
-                    radius={70}
-                />
-                 <CircleMarker
-                    coordinate={{ latitude: 19.1024, longitude: 72.8312 }}
-                    radius={50}
-                />
-                  <CircleMarker
-                    coordinate={{ latitude: 19.1075, longitude: 72.8302 }}
-                    radius={20}
-                />
+                
+                {locations.map((location, index) => (
+            <CircleMarker key={index} coordinate={{ latitude: location.fromlatitude, longitude: location.fromlongitude }} radius={40} />
+          ))}
             </MapView>
+            )}
         </View>
     );
 };
 
 const CircleMarker = ({ coordinate, radius }) => {
     const circleCoordinates = [];
-    const earthRadius = 6378.1; // Radius of the Earth in kilometers
+    const earthRadius = 6378.1; 
 
-    // Generate circle coordinates
     for (let i = 0; i <= 360; i += 10) {
         const angle = (i * Math.PI) / 180;
         const latitude = Math.min(Math.max(coordinate.latitude + (radius / earthRadius) * (Math.sin(angle)), -90), 90);
@@ -76,3 +91,4 @@ const styles = StyleSheet.create({
 });
 
 export default MapScreenRider;
+
