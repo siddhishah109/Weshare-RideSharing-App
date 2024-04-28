@@ -66,6 +66,8 @@ const HomeScreen = ({ navigation }) => {
         tolatitude: tolatitudeNum,
         tolongitude: tolongitudeNum,
       });
+      setTextInputValue1('');
+      setTextInputValue2('');
     }
   };
   const preferences =()=>{
