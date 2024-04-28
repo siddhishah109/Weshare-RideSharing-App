@@ -1,13 +1,33 @@
-import React, { useState } from 'react';
+import React, { useState , useEffect} from 'react';
 import { StyleSheet, View, Text, TouchableOpacity,Switch, Modal, TextInput,Image ,TouchableWithoutFeedback, Dimensions } from 'react-native';
 import MapScreen from './MapScreen';
 import Geolocation from '@react-native-community/geolocation';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
 const HomeScreen = ({ navigation }) => {
   const [selectedButton, setSelectedButton] = useState('auto');
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [textInputValue1, setTextInputValue1] = useState('');
   const [textInputValue2, setTextInputValue2] = useState('');
+  const [username, setUsername] = useState('');
   const [useCurrentLocation, setUseCurrentLocation] = useState(false);
+  useEffect(() => {
+    const getUsername = async () => {
+        try {
+            const userDataString = await AsyncStorage.getItem('userData');
+            if (userDataString !== null) {
+                const userData = JSON.parse(userDataString);
+                setUsername(userData.username);
+            } else {
+                console.log('No user data found in AsyncStorage');
+            }
+        } catch (error) {
+            console.error('Error getting user data from AsyncStorage in preference screen:', error);
+        }
+    };
+
+    getUsername();
+}, []);
   const openDrawer = () => {
     setIsDrawerOpen(true);
   };
@@ -24,7 +44,7 @@ const HomeScreen = ({ navigation }) => {
       closeDrawer();
     }
   };
-  const closeDrawerDone = () => {
+  const closeDrawerDone = async () => {
     setIsDrawerOpen(false);
     
     let fromlatitudeNum, fromlongitudeNum;
@@ -32,22 +52,41 @@ const HomeScreen = ({ navigation }) => {
       // Get current location using Geolocation API
       const [tolatitude, tolongitude] = textInputValue2.split(',');
       Geolocation.getCurrentPosition(
-        position => {
+        async position => {
           fromlatitudeNum = position.coords.latitude;
           fromlongitudeNum = position.coords.longitude;
           const tolatitudeNum = parseFloat(tolatitude.trim());
           const tolongitudeNum = parseFloat(tolongitude.trim());
           // Navigate to the RideMapScreen
-          navigation.navigate('RideMapScreen', {
-            fromlatitude: fromlatitudeNum,
-            fromlongitude: fromlongitudeNum,
-            tolatitude: tolatitudeNum,
-            tolongitude: tolongitudeNum,
-          });
         },
         error => console.error(error),
         { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
       );
+      try {
+        const tolatitudeNum = parseFloat(tolatitude.trim());
+          const tolongitudeNum = parseFloat(tolongitude.trim());
+        const response= await axios.post('https://weshare-backend-3.onrender.com/ride-request',{
+          email: username,
+          fromlatitude: fromlatitudeNum,
+          fromlongitude: fromlongitudeNum,
+          tolatitude: tolatitudeNum,
+          tolongitude: tolongitudeNum
+      }
+      );
+      console.log(response.data); 
+      if (response.status === 200 || response.status === 201 ) {
+        console.log('navidate to ride screen')
+        navigation.navigate('RideMapScreen', {
+          fromlatitude: fromlatitudeNum,
+          fromlongitude: fromlongitudeNum,
+          tolatitude: tolatitudeNum,
+          tolongitude: tolongitudeNum,
+        });
+      }
+     
+      } catch (error) {
+        console.log('Error:', error);
+      }
     } else {
       // Split the input value by comma
       const [fromlatitude, fromlongitude] = textInputValue1.split(',');
@@ -59,13 +98,29 @@ const HomeScreen = ({ navigation }) => {
       const tolatitudeNum = parseFloat(tolatitude.trim());
       const tolongitudeNum = parseFloat(tolongitude.trim());
   
-      // Navigate to the RideMapScreen
-      navigation.navigate('RideMapScreen', {
-        fromlatitude: fromlatitudeNum,
+
+      try {
+        const response= await axios.post('https://weshare-backend-3.onrender.com/ride-request',{
+          email: username,
+          fromlatitude: fromlatitudeNum,
         fromlongitude: fromlongitudeNum,
         tolatitude: tolatitudeNum,
-        tolongitude: tolongitudeNum,
-      });
+        tolongitude: tolongitudeNum
+      }
+      );
+      console.log("----------------",response.data); 
+      if (response.status === 200 || response.status === 201 ) {
+        console.log('navidate to ride screen')
+        navigation.navigate('RideMapScreen', {
+          fromlatitude: fromlatitudeNum,
+          fromlongitude: fromlongitudeNum,
+          tolatitude: tolatitudeNum,
+          tolongitude: tolongitudeNum,
+        });
+      }
+      } catch (error) {
+        console.log('Error:', error);
+      }
       setTextInputValue1('');
       setTextInputValue2('');
     }
@@ -87,7 +142,6 @@ const HomeScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
 
-      {/* Main Content */}
       <MapScreen />
       <View style={styles.content}>
         <TouchableOpacity onPress={preferences}>
@@ -157,7 +211,7 @@ const HomeScreen = ({ navigation }) => {
               />
               <TouchableOpacity onPress={closeDrawerDone}>
               <View style={styles.q}>
-              <Text style={styles.ptext}>Done</Text>
+              <Text style={styles.ptext}>Request Ride</Text>
             </View>
               </TouchableOpacity>
               </View>

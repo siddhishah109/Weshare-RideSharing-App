@@ -1,36 +1,78 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import React, { useState ,useEffect } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, ActivityIndicator ,Image } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
+const GroupScreen = ({ route ,navigation }) => {
+  const { fromlatitude, fromlongitude, tolatitude, tolongitude } = route.params;
+  const [email, setEmail] = useState('');
+  const [groups, setGroups] = useState([]);
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    const getUsername = async () => {
+        try {
+            const userDataString = await AsyncStorage.getItem('userData');
+            if (userDataString !== null) {
+                const userData = JSON.parse(userDataString);
+                setEmail(userData.username);
+            } else {
+                console.log('No user data found in AsyncStorage');
+            }
+        } catch (error) {
+            console.error('Error getting user data from AsyncStorage in preference screen:', error);
+        }
+    };
 
-const GroupScreen = ({ navigation }) => {
-  const [groups] = useState([
-    { id: 1, name: 'Group 1', details: 'Ishika Jain, Rohan Shah, Krishi Shah ', image: require('../asset/auto.png') },
-    { id: 2, name: 'Group 2', details: 'Ishika Jain, Deep Metha , Khushi Joshi', image: require('../asset/auto.png') },
-    { id: 3, name: 'Group 3', details: 'Ishika Jain, Bhuvan Jain, Khushi Joshi', image: require('../asset/auto.png') }
-  ]);
-
-  const handleGroupClick = (groupId) => {
-    // Handle navigation or any other action
-    console.log(`Clicked on Group ${groupId}`);
+    getUsername();
+}, []);
+useEffect(() => {
+  const fetchGroups = async () => {
+    try {
+      const response = await axios.post('https://weshare-backend-3.onrender.com/find-matching-rides', {
+        email: email,
+        from_latitude: fromlatitude,
+        from_longitude: fromlongitude,
+        to_latitude: tolatitude,
+        to_longitude: tolongitude
+      });
+      console.log(response.data);
+      setGroups(response.data.groups);
+      setLoading(false);
+    } catch (error) {
+      console.error('Error fetching groups:', error);
+    }
   };
+  fetchGroups();
+  fetchGroups();
+}, []); 
+
+const handleGroupClick = (groupId, groupMembers) => {
+  console.log(`Clicked on Group ${groupId}`);
+  navigation.navigate('GroupSelectionScreen', { groupId: groupId, groupMembers: groupMembers });
+};
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-        <Text style={styles.backButtonText}>{'< Back'}</Text>
-      </TouchableOpacity>
       <Text style={styles.heading}>Available Groups for Ride</Text>
-      {groups.map(group => (
-        <TouchableOpacity key={group.id} onPress={() => handleGroupClick(group.id)}>
+      {loading ? ( // Display loader while loading
+        <ActivityIndicator size="large" color="#008955" />
+      ) : (
+      groups.map(group => (
+        <TouchableOpacity key={group.group} onPress={() => handleGroupClick(group.group, group.users.map(user => user.email))}>
           <View style={styles.group}>
-            <Text style={styles.groupName}>{group.name}</Text>
-            <Text>{group.details}</Text>
-            <Image source={group.image} style={styles.groupImage} />
-            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('GroupSelectionScreen', { groupId: group.id })}>
+            <Text style={styles.groupName}>{`Group ${group.group}`}</Text>
+            {group.users.map(user => (
+              <View key={user.email}>
+                <Text>{`Email: ${user.email}`}</Text>
+                <Text>{`Preferences: ${user.preferences.join(', ')}`}</Text>
+              </View>
+            ))}
+            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('GroupSelectionScreen', { groupId: group.group })}>
               <Text style={styles.buttonText}>View Group</Text>
             </TouchableOpacity>
           </View>
         </TouchableOpacity>
-      ))}
+      ))
+    )}
     </View>
   );
 };

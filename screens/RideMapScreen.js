@@ -6,7 +6,7 @@ const RideMapScreen = ({ route ,navigation}) => {
   const { fromlatitude, fromlongitude, tolatitude, tolongitude } = route.params;
 
   const calculateIntermediatePoints = () => {
-    const numberOfSegments = 20; // Adjust this for desired dash density
+    const numberOfSegments = 20; 
     const intermediatePoints = [];
 
     for (let i = 0; i <= numberOfSegments; i++) {
@@ -19,7 +19,12 @@ const RideMapScreen = ({ route ,navigation}) => {
     return intermediatePoints;
   };
   const findgroup = () => {
-    navigation.navigate('GroupScreen');
+    navigation.navigate('GroupScreen', {
+      fromlatitude: fromlatitude,
+      fromlongitude: fromlongitude,
+      tolatitude: tolatitude,
+      tolongitude: tolongitude,
+    });
   };
     const intermediatePoints = calculateIntermediatePoints();
 
