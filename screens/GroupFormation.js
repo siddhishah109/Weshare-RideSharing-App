@@ -47,9 +47,9 @@ useEffect(() => {
   fetchGroups();
 }, [email, fromlatitude, fromlongitude, tolatitude, tolongitude]); 
 
-const handleGroupClick = (groupId, groupMembers) => {
-  console.log(`Clicked on Group ${groupId}`);
-  navigation.navigate('GroupSelectionScreen', { groupId: groupId, groupMembers: groupMembers });
+const handleGroupClick = (groupId, users) => {
+  console.log('Group clicked:', groupId, users);
+  navigation.navigate('GroupSelectionScreen', { groupId,email, users });
 };
 
   return (
@@ -68,7 +68,7 @@ const handleGroupClick = (groupId, groupMembers) => {
                 <Text>{`Preferences: ${user.preferences.join(', ')}`}</Text>
               </View>
             ))}
-            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('GroupSelectionScreen', { groupId: group.group })}>
+            <TouchableOpacity style={styles.button} onPress={() => handleGroupClick(group.group, group.users)}>
               <Text style={styles.buttonText}>View Group</Text>
             </TouchableOpacity>
           </View>

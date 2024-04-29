@@ -1,36 +1,30 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 
-const GroupSelectionScreen = ({ navigation }) => {
+const GroupSelectionScreen = ({ navigation ,route}) => {
+  const { groupId,email, users } = route.params;
   const [specifications] = useState([
     { id: 1, label: 'Year', value: '2024' },
     { id: 2, label: 'Seat', value: '4' },
     { id: 3, label: 'Distance', value: '20 km' }
   ]);
 
-  const [groupMembers] = useState([
-    { id: 1, name: 'Member 1' },
-    { id: 2, name: 'Member 2' },
-    { id: 3, name: 'Member 3' }
-  ]);
-  
   const handelAccept = () => {
     navigation.navigate('ThankyouScreen');
   };
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+      {/* <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
         <Text style={styles.backButtonText}>{'< Back'}</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
       <Text style={styles.heading}>VIEW GROUP</Text>
 
-      {/* Padding */}
+     
       <View style={styles.padding} />
 
-      {/* Specification Heading */}
+  
       <Text style={styles.sectionTitle}>Specification</Text>
 
-      {/* Specifications */}
       <View style={styles.specContainer}>
         {specifications.map(spec => (
           <View key={spec.id} style={styles.specItem}>
@@ -40,22 +34,23 @@ const GroupSelectionScreen = ({ navigation }) => {
         ))}
       </View>
 
-      {/* Group Members Heading */}
       <Text style={styles.sectionTitle}>Group Members</Text>
 
-      {/* Group Members */}
       <View style={styles.section}>
-        {groupMembers.map(member => (
-          <View key={member.id} style={styles.memberBox}>
-            <Text style={styles.memberText}>{member.name}</Text>
+          <View style={styles.memberBox}>
+            <Text style={styles.memberText}>{email}</Text>
+          </View>
+         {users.map((user, index) => (
+          <View key={index} style={styles.memberBox}>
+            <Text style={styles.memberText}>{user.email}</Text>
           </View>
         ))}
       </View>
 
       {/* Buttons */}
       <View style={styles.buttonContainer}>
-        <TouchableOpacity style={[styles.button, styles.declineButton]}>
-          <Text style={styles.buttonText}>Decline</Text>
+        <TouchableOpacity style={[styles.button, styles.declineButton]}onPress={() => navigation.goBack()}>
+          <Text style={styles.buttonText}>Back</Text>
         </TouchableOpacity>
         <TouchableOpacity style={[styles.button, styles.acceptButton]} onPress={handelAccept}>
           <Text style={styles.buttonText}>Accept</Text>

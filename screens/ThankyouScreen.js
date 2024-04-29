@@ -8,18 +8,15 @@ const ThankyouScreen = ({navigation}) => {
   return (
     <View style={styles.c}>
       <View style={styles.head} >
-        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-        <Text style={styles.backButtonText}>{'< Back'}</Text>
-      </TouchableOpacity>
       <Text style={styles.heading}></Text>
         </View>
         <View style={styles.container}>
             <Image source={require('../asset/ty1.png')}  />
         <Text style={styles.ty}>Thankyou</Text>
         <Text style={styles.t}>Your group has formed successfully </Text>
-        <TouchableOpacity style={styles.q}>
+        <TouchableOpacity style={styles.q}  onPress={handelDone}>
               <View >
-              <Text style={styles.buttonText} onPress={handelDone} >Done</Text>
+              <Text style={styles.buttonText} >Done</Text>
             </View>
               </TouchableOpacity>
         </View>
