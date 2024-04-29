@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View,TouchableOpacity,Text } from 'react-native';
+import { StyleSheet, View,TouchableOpacity,Text ,ActivityIndicator ,Alert} from 'react-native';
 import MapView, { Marker, Polyline } from 'react-native-maps';
 
 const RideMapScreen = ({ route ,navigation}) => {

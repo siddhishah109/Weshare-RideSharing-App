@@ -1,5 +1,5 @@
 import React, { useState , useEffect} from 'react';
-import { StyleSheet, View, Text, TouchableOpacity,Switch, Modal, TextInput,Image ,TouchableWithoutFeedback, Dimensions } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity,Switch, Modal, TextInput,Image ,TouchableWithoutFeedback, Dimensions ,ActivityIndicator, Alert } from 'react-native';
 import MapScreen from './MapScreen';
 import Geolocation from '@react-native-community/geolocation';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -11,6 +11,7 @@ const HomeScreen = ({ navigation }) => {
   const [textInputValue2, setTextInputValue2] = useState('');
   const [username, setUsername] = useState('');
   const [useCurrentLocation, setUseCurrentLocation] = useState(false);
+  const [loading, setLoading] = useState(false);
   useEffect(() => {
     const getUsername = async () => {
         try {
@@ -45,7 +46,8 @@ const HomeScreen = ({ navigation }) => {
     }
   };
   const closeDrawerDone = async () => {
-    setIsDrawerOpen(false);
+    
+    setLoading(true);
     
     let fromlatitudeNum, fromlongitudeNum;
     if (useCurrentLocation) {
@@ -74,6 +76,8 @@ const HomeScreen = ({ navigation }) => {
       }
       );
       console.log(response.data); 
+      setLoading(false);
+      setIsDrawerOpen(false);
       if (response.status === 200 || response.status === 201 ) {
         console.log('navidate to ride screen')
         navigation.navigate('RideMapScreen', {
@@ -86,6 +90,8 @@ const HomeScreen = ({ navigation }) => {
      
       } catch (error) {
         console.log('Error:', error);
+        setLoading(false);
+        Alert.alert('Error', 'An error occurred. Please try again later.');
       }
     } else {
       // Split the input value by comma
@@ -109,6 +115,8 @@ const HomeScreen = ({ navigation }) => {
       }
       );
       console.log("----------------",response.data); 
+      setLoading(false);
+      setIsDrawerOpen(false);
       if (response.status === 200 || response.status === 201 ) {
         console.log('navidate to ride screen')
         navigation.navigate('RideMapScreen', {
@@ -120,6 +128,8 @@ const HomeScreen = ({ navigation }) => {
       }
       } catch (error) {
         console.log('Error:', error);
+        setLoading(false);
+        Alert.alert('Error', 'An error occurred. Please try again later.');
       }
       setTextInputValue1('');
       setTextInputValue2('');
@@ -211,7 +221,11 @@ const HomeScreen = ({ navigation }) => {
               />
               <TouchableOpacity onPress={closeDrawerDone}>
               <View style={styles.q}>
+              {loading ? ( // Render loader if loading state is true
+                      <ActivityIndicator size="small" color="#ffffff" />
+                    ) : (
               <Text style={styles.ptext}>Request Ride</Text>
+                    )}
             </View>
               </TouchableOpacity>
               </View>

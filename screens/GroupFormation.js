@@ -38,12 +38,14 @@ useEffect(() => {
       setGroups(response.data.groups);
       setLoading(false);
     } catch (error) {
-      console.error('Error fetching groups:', error);
+      // console.error('Error fetching groups:', error);
+    }
+    finally {
+      setLoading(false);
     }
   };
   fetchGroups();
-  fetchGroups();
-}, []); 
+}, [email, fromlatitude, fromlongitude, tolatitude, tolongitude]); 
 
 const handleGroupClick = (groupId, groupMembers) => {
   console.log(`Clicked on Group ${groupId}`);

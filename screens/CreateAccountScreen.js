@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image ,Alert } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image ,Alert ,ActivityIndicator } from 'react-native';
 import axios from 'axios';
 
 const CreateAccountScreen = ({ navigation }) => {
@@ -9,6 +9,7 @@ const CreateAccountScreen = ({ navigation }) => {
   const [password1, setPassword1] = useState('');
   const [password2, setPassword2] = useState('');
   const [termsChecked, setTermsChecked] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleSignup = async () => {
     console.log('Signup button pressed');
@@ -25,13 +26,14 @@ const CreateAccountScreen = ({ navigation }) => {
       )
     
     try {
+      setLoading(true); 
       const response = await axios.post('https://weshare-backend-3.onrender.com/register', {
         name: name,
         email: email,
         phone: phone,
         password: password1,
       });
-
+      setLoading(false);
       if (response.status === 201) {
         // Registration successful
         navigation.navigate("LoginScreen1");
@@ -47,10 +49,11 @@ const CreateAccountScreen = ({ navigation }) => {
         if (responseData && responseData.error) {
           Alert.alert('Error', responseData.error);
         } else {
-          Alert.alert('Error', 'Something went wrong. Please try again later.');
+          Alert.alert('Error', 'Something went wrong . Please try again later.');
         }
       }
     } catch (error) {
+      setLoading(false);
       console.error('Error:', error);
       console.log(error.response);
       Alert.alert('Error', 'Already user? Pls login');
@@ -58,6 +61,10 @@ const CreateAccountScreen = ({ navigation }) => {
   };
   return (
     <View style={styles.container}>
+       {loading ? ( 
+        <ActivityIndicator size="large" color="#008955" />
+      ) : (
+      <>
       <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
         <Text style={styles.backButtonText}>{'< Back'}</Text>
       </TouchableOpacity>
@@ -137,6 +144,8 @@ const CreateAccountScreen = ({ navigation }) => {
         <Text style={styles.accountText}>Already have an account?</Text>
         <Text style={styles.signInText}>Sign in</Text>
       </TouchableOpacity>
+      </>
+      )}
     </View>
   );
 };

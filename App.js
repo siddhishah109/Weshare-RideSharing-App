@@ -1,7 +1,7 @@
 import React, { useState ,useEffect} from 'react';
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import {  View, Text } from 'react-native';
+import {  View, Text,ActivityIndicator ,Alert } from 'react-native';
 import OnboardingScreen from "./screens/OnboardingScreen";
 import LoginScreen1 from "./screens/LoginScreen1";
 import LoginScreen from './screens/LoginScreen';
@@ -24,6 +24,7 @@ const Stack = createNativeStackNavigator();
 
 export default function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [loading, setLoading] = useState(true); 
   useEffect(() => {
     checkAuthentication();
   }, []);
@@ -33,13 +34,26 @@ export default function App() {
      
       if (userData) {
         setIsAuthenticated(true);
+        setLoading(false);
         console.log('User is authenticated');
+      }
+      else{
+        setIsAuthenticated(false);
+        setLoading(false);
       }
     } catch (error) {
       console.error('Error checking authentication:', error);
+      Alert.alert('An error occurred while checking authentication');
+      setLoading(false);
     }
   };
-
+  if (loading) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" color="#008955" />
+      </View>
+    );
+  }
   return (
     <NavigationContainer>
      <Stack.Navigator>

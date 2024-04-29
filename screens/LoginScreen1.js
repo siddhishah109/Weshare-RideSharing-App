@@ -1,12 +1,13 @@
 import React from 'react';
 import { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image ,Alert } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image ,Alert,ActivityIndicator  } from 'react-native';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const LoginScreen1 = ({ navigation }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleLogin = async () => {
     if (!username || !password) {
@@ -15,11 +16,12 @@ const LoginScreen1 = ({ navigation }) => {
     }
 
     try {
+      setLoading(true); 
       const response = await axios.post('https://weshare-backend-3.onrender.com/login', {
         email: username, 
         password,
       });
-
+      setLoading(false);
       if (response.status === 200) {
         const userData = { username }; 
         await AsyncStorage.setItem('userData', JSON.stringify(userData));
@@ -32,12 +34,17 @@ const LoginScreen1 = ({ navigation }) => {
       }
     } catch (error) {
       console.error('Error:', error);
-      Alert.alert('Error', 'invalid');
+      setLoading(false);
+      Alert.alert('Error', 'Error in logging in. Please try again.');
     }
   };
 
   return (
     <View style={styles.container}>
+       {loading ? ( 
+        <ActivityIndicator size="large" color="#008955" />
+      ) : (
+      <>
       <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
         <Text style={styles.backButtonText}>{'< Back'}</Text>
       </TouchableOpacity>
@@ -81,7 +88,8 @@ const LoginScreen1 = ({ navigation }) => {
       <TouchableOpacity onPress={() => navigation.navigate('CreateAccountScreen')} style={styles.signInLink}>
         <Text style={styles.accountText}>Don't have an account?</Text>
         <Text style={styles.signInText}>Sign up</Text>
-      </TouchableOpacity>
+      </TouchableOpacity></>
+       )}
     </View>
     
 

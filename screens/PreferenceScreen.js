@@ -1,5 +1,5 @@
 import React, { useState,useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet  } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet,ActivityIndicator ,Alert  } from 'react-native';
 import {Picker} from '@react-native-picker/picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
@@ -14,6 +14,7 @@ const PreferenceScreen = ({navigation}) => {
     const [selectedYear, setSelectedYear] = useState(years[0]);
     const [selectedGender, setSelectedGender] = useState(genders[0]);
     const [username, setUsername] = useState('');
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
       const getUsername = async () => {
@@ -34,6 +35,7 @@ const PreferenceScreen = ({navigation}) => {
   }, []);
 
     const handleDone = async () => {
+      setLoading(true);
         console.log('Selected Branch:', selectedBranch);
         console.log('Selected Role:', selectedRole);
         console.log('Selected Year:', selectedYear);
@@ -46,6 +48,7 @@ const PreferenceScreen = ({navigation}) => {
           gender: selectedGender
       };
        try {
+        
         const response= await axios.post('https://weshare-backend-3.onrender.com/preferences',{
           email: username, 
           branch: selectedBranch,
@@ -69,9 +72,10 @@ const PreferenceScreen = ({navigation}) => {
         }
         // Handle network error
         console.error('Network error:', error);
+        Alert.alert('Error', 'An error occurred. Please try again later.');
        }
        console.log(userDatas);
-       
+       setLoading(false);
     };
   return (
     <View style={styles.container}>
@@ -123,7 +127,11 @@ const PreferenceScreen = ({navigation}) => {
      </View>
      <TouchableOpacity  onPress={handleDone}>
               <View style={styles.q}>
+              {loading ? ( // Render loader if loading state is true
+            <ActivityIndicator size="small" color="#ffffff" />
+          ) : (
               <Text style={styles.ptext}>Done</Text>
+            )}
             </View>
               </TouchableOpacity>
     </View>
@@ -134,6 +142,9 @@ const styles = StyleSheet.create({
       flex: 1,
       padding: 10,
       backgroundColor: 'white',
+      display: 'flex',
+      flexDirection: 'column',
+      
     },
     backButton: {
       position: 'absolute',
@@ -161,6 +172,7 @@ const styles = StyleSheet.create({
         height: 50,
         width: 230,
         marginTop: 10,
+        left:70,
         borderRadius: 10,
         backgroundColor: '#008955',
         alignItems: 'center',
