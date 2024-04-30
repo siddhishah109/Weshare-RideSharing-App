@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, View,TouchableOpacity,Text ,ActivityIndicator ,Alert} from 'react-native';
 import MapView, { Marker, Polyline } from 'react-native-maps';
+import { Icon } from 'react-native-paper';
 
 const RideMapScreen = ({ route ,navigation}) => {
   const { fromlatitude, fromlongitude, tolatitude, tolongitude } = route.params;
@@ -30,8 +31,9 @@ const RideMapScreen = ({ route ,navigation}) => {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-    <Text style={styles.backButtonText}>{'< Back'}</Text>
+      <TouchableOpacity onPress={() => navigation.goBack()}style={styles.backButton} >
+    <Text style={styles.backButtonText}>{'Back'}</Text>
+    
     </TouchableOpacity>
       <MapView style={styles.map} initialRegion={{
         latitude: fromlatitude,
@@ -87,6 +89,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: 'white',
     fontWeight: 'bold',
+    marginLeft: 10,
+    marginRight:10
   },
   backButton:{
     position: 'absolute',

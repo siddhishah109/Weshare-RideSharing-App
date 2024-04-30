@@ -54,17 +54,26 @@ const handleGroupClick = (groupId, users) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.heading}>Available Groups for Ride</Text>
-      {loading ? ( // Display loader while loading
+     <View>
+     <TouchableOpacity onPress={() => navigation.goBack()}style={styles.backButton} >
+    <Text style={styles.backButtonText}>{'Back'}</Text>
+    
+    </TouchableOpacity>
+    <Text style={styles.heading}>Available Groups</Text>
+     </View>
+     
+      {loading ? ( 
         <ActivityIndicator size="large" color="#008955" />
       ) : (
       groups.map(group => (
-        <TouchableOpacity key={group.group} onPress={() => handleGroupClick(group.group, group.users.map(user => user.email))}>
-          <View style={styles.group}>
-            <Text style={styles.groupName}>{`Group ${group.group}`}</Text>
+          <View style={styles.group} key={group.group_id} >
+           
+            <View style={styles.groupName}> 
+            <Text style={styles.groupName1}>{`Group ${group.group}`}</Text>
+            </View>
             {group.users.map(user => (
-              <View key={user.email}>
-                <Text>{`Email: ${user.email}`}</Text>
+              <View key={user.email} >
+                <Text style={styles.texte}>{`Email: ${user.email}`}</Text>
                 <Text>{`Preferences: ${user.preferences.join(', ')}`}</Text>
               </View>
             ))}
@@ -72,7 +81,7 @@ const handleGroupClick = (groupId, users) => {
               <Text style={styles.buttonText}>View Group</Text>
             </TouchableOpacity>
           </View>
-        </TouchableOpacity>
+    
       ))
     )}
     </View>
@@ -83,33 +92,76 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 10,
-    backgroundColor: 'white',
+    // backgroundColor: 'white',
   },
   backButton: {
     position: 'absolute',
+    display: 'flex',
+    backgroundColor: '#008955',
+    left:13,
     top: 10,
-    left: 10,
+    padding:10,
+    borderRadius: 10,
+    zIndex:9999,
   },
   backButtonText: {
     fontSize: 16,
-    color: 'black',
+    color: 'white',
+    fontWeight: 'bold',
+    marginLeft: 10,
+    marginRight:10
+  },
+  groupName:{
+    fontSize: 20,
+    alignItems: 'center',
+    fontWeight: 'bold',
+    marginBottom: 20,
+    display : 'flex',
+    alignItems: 'center',
+    width: '300',
+    alignSelf: 'center',
+    justifyContent: 'center',
+  },
+  groupName1:{
+    fontSize: 17,
+    alignItems: 'center',
+    alignSelf: 'center',
+    fontWeight: 'bold',
+    display : 'flex',
+    alignItems: 'center',
+    width: '100%',
+    alignSelf: 'center',
+    justifyContent: 'center',
+    color: '#008955',
   },
   heading: {
     fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 20,
     alignSelf: 'flex-start',
-    marginLeft: 10,
-    marginTop: 30, // Adjusted for back button
+    marginLeft: 130,
+    marginTop: 15,
+  },
+  texte:{
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 5,
   },
   group: {
-    padding: 10,
+    padding: 15,
     marginBottom: 20,
     borderWidth: 1,
     borderColor: '#008955',
     borderRadius: 10,
     backgroundColor: '#E2F5ED',
-    position: 'relative', // Make it relative to allow absolute positioning of the image
+    position: 'relative', 
+    shadowColor: 'black',
+    shadowOpacity: 0.5,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 5,
+    elevation: 5,
+    margin:10,
+    display: 'flex',
   },
   groupName: {
     fontSize: 16,
