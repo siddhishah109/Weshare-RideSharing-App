@@ -22,6 +22,7 @@ const HistoryScreen = () => {
       }
     };
     getEmail();
+
   },[]);
 
   useEffect(() => {
@@ -40,7 +41,7 @@ const HistoryScreen = () => {
     };
 
     fetchUserGroups();
-  }, [email]);
+  }, [email , userGroups]);
 
   // const handleToggleFavorite = async (group) => {
   //   try {

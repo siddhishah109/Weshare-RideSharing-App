@@ -43,7 +43,7 @@ const FavouriteScreen = () => {
     if (email) {
       fetchFavoriteGroups();
     }
-  }, [email]);
+  }, [email , favoriteGroups]);
 
 
   const removeFromFavorites = async (member1, member2) => {
@@ -122,6 +122,7 @@ const styles = StyleSheet.create({
   box: {
     flex: 1,
     width: '100%',
+
   },
 
   favoriteGroupsContainer: {

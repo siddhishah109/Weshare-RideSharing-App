@@ -2,7 +2,7 @@ import React ,{useState  ,useEffect}from 'react'
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ActivityIndicator  } from 'react-native';
 import axios from 'axios';
 import io from 'socket.io-client';
-
+import Icon from 'react-native-vector-icons/FontAwesome';
 const WaitingScreen = ({navigation ,route}) => {
     const { groupId } = route.params;
     const [loading, setLoading] = useState(true);
@@ -127,7 +127,9 @@ const WaitingScreen = ({navigation ,route}) => {
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
       <Text>Waiting for other members for group approval...</Text>
       <TouchableOpacity style={styles.button} onPress={handleRefresh}>
-        <Text style={styles.buttonText}>Refresh</Text>
+        <Text style={styles.buttonText}>Refresh 
+         </Text>
+         <Icon name="refresh" size={20} color="white" />
       </TouchableOpacity>
     </View>
   )
@@ -141,12 +143,18 @@ const styles = StyleSheet.create({
     button: {
       marginTop: 20,
       padding: 10,
+      display: 'flex',
+      flexDirection: 'row',
+      justifyContent: 'center',
       backgroundColor: '#008000',
       borderRadius: 5,
+      alignItems: 'center',
     },
     buttonText: {
       color: 'white',
       fontWeight: 'bold',
+      fontSize: 17,
+      marginRight: 10,
     },
   });
 export default WaitingScreen

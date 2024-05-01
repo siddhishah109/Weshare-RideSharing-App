@@ -2,6 +2,7 @@ import React, { useState ,useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ActivityIndicator ,Image } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
+import Icon from 'react-native-vector-icons/FontAwesome';
 const GroupScreen = ({ route ,navigation }) => {
   const { fromlatitude, fromlongitude, tolatitude, tolongitude } = route.params;
   const [email, setEmail] = useState('');
@@ -24,26 +25,27 @@ const GroupScreen = ({ route ,navigation }) => {
 
     getUsername();
 }, []);
+const fetchGroups = async () => {
+  try {
+    const response = await axios.post('https://weshare-backend-3.onrender.com/find-matching-rides', {
+      email: email,
+      from_latitude: fromlatitude,
+      from_longitude: fromlongitude,
+      to_latitude: tolatitude,
+      to_longitude: tolongitude
+    });
+    console.log(response.data);
+    setGroups(response.data.groups);
+    setLoading(false);
+  } catch (error) {
+    // console.error('Error fetching groups:', error);
+  }
+  finally {
+    setLoading(false);
+  }
+};
 useEffect(() => {
-  const fetchGroups = async () => {
-    try {
-      const response = await axios.post('https://weshare-backend-3.onrender.com/find-matching-rides', {
-        email: email,
-        from_latitude: fromlatitude,
-        from_longitude: fromlongitude,
-        to_latitude: tolatitude,
-        to_longitude: tolongitude
-      });
-      console.log(response.data);
-      setGroups(response.data.groups);
-      setLoading(false);
-    } catch (error) {
-      // console.error('Error fetching groups:', error);
-    }
-    finally {
-      setLoading(false);
-    }
-  };
+ 
   fetchGroups();
 }, [email, fromlatitude, fromlongitude, tolatitude, tolongitude]); 
 
@@ -52,18 +54,28 @@ const handleGroupClick = (groupId, users) => {
   navigation.navigate('GroupSelectionScreen', { groupId,email, users });
 };
 
+const handleRefresh = () => {
+  setLoading(true);
+  fetchGroups();
+};
   return (
     <View style={styles.container}>
-     <View>
+     <View style={styles.top}>
      <TouchableOpacity onPress={() => navigation.goBack()}style={styles.backButton} >
     <Text style={styles.backButtonText}>{'Back'}</Text>
     
     </TouchableOpacity>
     <Text style={styles.heading}>Available Groups</Text>
+
+    <TouchableOpacity onPress={handleRefresh}>
+      <Icon name="refresh" size={25} color="#008955" />
+    </TouchableOpacity>
      </View>
      
       {loading ? ( 
-        <ActivityIndicator size="large" color="#008955" />
+        <View style={styles.containerloaedr}>
+          <ActivityIndicator size="large" color="#008955" />
+          </View>
       ) : (
       groups.map(group => (
           <View style={styles.group} key={group.group_id} >
@@ -93,6 +105,11 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 10,
     // backgroundColor: 'white',
+  },
+  containerloaedr:{
+   justifyContent: 'center',
+    alignItems: 'center',
+
   },
   backButton: {
     position: 'absolute',
@@ -187,6 +204,13 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: 'bold',
   },
+  top:{
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginRight:15,
+  }
 });
 
 export default GroupScreen;

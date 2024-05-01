@@ -44,7 +44,7 @@ const ProfileScreen1 = () => {
     };
 
     fetchUserData();
-  }, [email]);
+  }, [email,userData]);
 
   if (loading) {
     return (
