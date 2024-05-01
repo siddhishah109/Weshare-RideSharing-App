@@ -8,7 +8,7 @@ const WaitingScreen = ({navigation ,route}) => {
     const [loading, setLoading] = useState(true);
     const [overallStatus, setOverallStatus] = useState('');
     const fetchGroupHistory = async () => {
-        setLoading(true); // Set loading to true while fetching data
+        setLoading(true);
         try {
           const response = await axios.get(`https://weshare-backend-3.onrender.com/group-history?group_id=${groupId}`);
           setOverallStatus(response.data.overall_status);
@@ -25,7 +25,9 @@ const WaitingScreen = ({navigation ,route}) => {
 
       useEffect(() => {
         if (overallStatus === 'approved') {
-          navigation.navigate('ThankyouScreen');
+          navigation.navigate('ThankyouScreen',{
+            groupId: groupId
+          });
         }
       }, [overallStatus, navigation]);
 
@@ -123,7 +125,7 @@ const WaitingScreen = ({navigation ,route}) => {
       }
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Waiting for group approval...</Text>
+      <Text>Waiting for other members for group approval...</Text>
       <TouchableOpacity style={styles.button} onPress={handleRefresh}>
         <Text style={styles.buttonText}>Refresh</Text>
       </TouchableOpacity>

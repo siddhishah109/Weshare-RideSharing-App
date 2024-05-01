@@ -48,8 +48,8 @@ const ProfileScreen1 = () => {
 
   if (loading) {
     return (
-      <View style={styles.container}>
-        <ActivityIndicator size="large" color="#007bff" />
+      <View style={styles.containerload}>
+        <ActivityIndicator size="large" color="#008000" />
       </View>
     );
   }
@@ -59,6 +59,7 @@ const ProfileScreen1 = () => {
       {userData ? (
         <>
            <Image source={require('../asset/asset2.png')} style={styles.avatar} />
+        <Text style={styles.heading}>Profile</Text>
          <View style={styles.flexp}>
          <View style={styles.gp}>
             <Text style={styles.label}>Name:</Text>
@@ -102,6 +103,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 30,
     backgroundColor: '#B9E5D1',
+    
+  },
+  containerload:{
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#B9E5D1',
+
   },
   avatar: {
 
@@ -109,24 +118,22 @@ const styles = StyleSheet.create({
   flexp: {
     display: 'flex',
     alignItems: 'center',
-  },
-  gp: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    textAlign: 'center',
-    marginTop: 10,
-    width: '75%',
-    marginBottom: 10,
+    marginTop: 20,
+    backgroundColor: '#f2f2f2',
+    padding: 10,
+    borderRadius: 10,
     elevation: 5,
     shadowColor: '#52006A',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.5,
     shadowRadius: 5,
-    borderRadius: 10,
-    backgroundColor: '#f2f2f2',
-    padding: 10,
+
+  },
+  gp: {
+    display: 'flex',
+    flexDirection: 'row',
+    marginTop: 10,
+    marginBottom: 10,
   },
   label: {
     fontSize: 16,
@@ -142,6 +149,12 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: 'red',
   },
+  heading:{
+    fontSize: 30,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    marginTop:20
+  }
 });
 
 export default ProfileScreen1;

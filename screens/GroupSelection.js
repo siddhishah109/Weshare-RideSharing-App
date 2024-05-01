@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet ,ActivityIndicator } from 'react-native';
 import axios from 'axios';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const GroupSelectionScreen = ({ navigation ,route}) => {
   const { groupId, email, users } = route.params;
   const [loading, setLoading] = useState(false);
+  const [heartColor, setHeartColor] = useState('black');
+  const [buttonClicked, setButtonClicked] = useState(false);
+
   const [specifications] = useState([
     { id: 1, label: 'Year', value: '2024' },
     { id: 2, label: 'Seat', value: '4' },
@@ -39,13 +41,34 @@ const GroupSelectionScreen = ({ navigation ,route}) => {
       setLoading(false);
     }
   };
+
+  const handleHeartClick = async () => {
+    if (!buttonClicked) {
+      setButtonClicked(true);
+      setHeartColor('red'); 
+      setLoading(true);
+      try {
+        const response = await axios.post('https://weshare-backend-3.onrender.com/add-favorite-group', {
+          user: email,
+          member1: users[0].email,
+          member2: users[1].email
+        });
+
+        console.log(response.data.message);
+      } catch (error) {
+        console.error('Error adding favorite group:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
   return (
     <View style={styles.container}>
       <View style={styles.top}>
       <Text style={styles.heading}>VIEW GROUP</Text>
-      <TouchableOpacity style={styles.icon}>
-        <Icon name="heart" size={30} color="red" style={styles.heart} />
-      </TouchableOpacity>
+      <TouchableOpacity style={styles.icon}  onPress={handleHeartClick} disabled={buttonClicked}>
+          <Icon name="heart" size={25} color={heartColor} style={styles.heart} />
+        </TouchableOpacity>
       </View>
 
      
@@ -112,9 +135,8 @@ const styles = StyleSheet.create({
   },
   heart:{
   borderColor: 'black',
-  borderWidth: '1px',
   backgroundColor: 'white',
-  color: 'black',
+  // color: 'black',
   },
   backButton: {
     marginBottom: 10,

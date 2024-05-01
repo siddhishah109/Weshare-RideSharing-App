@@ -1,10 +1,27 @@
-import React from 'react'
-import { StyleSheet, View, Text, Image, TouchableOpacity,ScrollView, Button } from 'react-native';
+import React ,{useState , useEffect} from 'react'
+import { StyleSheet, View, Text, Image, TouchableOpacity,ScrollView, Button ,ActivityIndicator } from 'react-native';
+import axios from 'axios';
 
-const ThankyouScreen = ({navigation}) => {
-    const handelDone = () => {
-        navigation.navigate('HomeTabs');
-      };
+const ThankyouScreen = ({navigation , route}) => {
+   const { groupId } = route.params;
+   const [loading, setLoading] = useState(false);
+
+   const handleDone = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.delete('https://weshare-backend-3.onrender.com/delete-group', {
+        params: {
+          group_id: groupId
+        }
+      });
+      console.log(response.data.message);
+      navigation.navigate('HomeTabs');
+    } catch (error) {
+      console.error('Error deleting group:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <View style={styles.c}>
       <View style={styles.head} >
@@ -14,7 +31,7 @@ const ThankyouScreen = ({navigation}) => {
             <Image source={require('../asset/ty1.png')}  />
         <Text style={styles.ty}>Thankyou</Text>
         <Text style={styles.t}>Your group has formed successfully </Text>
-        <TouchableOpacity style={styles.q}  onPress={handelDone}>
+        <TouchableOpacity style={styles.q}  onPress={handleDone}>
               <View >
               <Text style={styles.buttonText} >Done</Text>
             </View>

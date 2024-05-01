@@ -73,7 +73,7 @@ const HistoryScreen = () => {
   if (loading) {
     return (
       <View style={styles.container}>
-        <ActivityIndicator size="large" color="#007bff" />
+        <ActivityIndicator size="large" color="#008000" />
       </View>
     );
   }
