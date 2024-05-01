@@ -1,57 +1,29 @@
 import React from 'react';
 import { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image ,Alert,ActivityIndicator  } from 'react-native';
-import axios from 'axios';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image } from 'react-native';
 
-const LoginScreen1 = ({ navigation }) => {
+const RiderLogin = ({ navigation }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
 
-  const handleLogin = async () => {
+  const handleLogin = () => {
     if (!username || !password) {
-      Alert.alert('Error', 'Please enter username and password');
+      alert('Please enter username and password');
       return;
     }
-
-    try {
-      setLoading(true); 
-      const response = await axios.post('https://weshare-backend-3.onrender.com/login', {
-        email: username, 
-        password,
-      });
-      setLoading(false);
-      if (response.status === 200) {
-        const userData = { username }; 
-        await AsyncStorage.setItem('userData', JSON.stringify(userData));
-        await AsyncStorage.setItem('loginTime', JSON.stringify(new Date().getTime()));
-        console.log('AsyncStorage', await AsyncStorage.getItem('userData'));
-        navigation.navigate("HomeTabs");
-        console.log('Login successful');
-      } else {
-        Alert.alert('Error', 'Invalid email or password');
-      }
-    } catch (error) {
-      console.error('Error:', error);
-      setLoading(false);
-      Alert.alert('Error', 'Error in logging in. Please try again.');
-    }
+    navigation.navigate("RiderScreen");
+    console.log('Login button pressed');
   };
 
   return (
     <View style={styles.container}>
-       {loading ? ( 
-        <ActivityIndicator size="large" color="#008955" />
-      ) : (
-      <>
       <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
         <Text style={styles.backButtonText}>{'< Back'}</Text>
       </TouchableOpacity>
-      <Text style={styles.title}>Log In</Text>
+      <Text style={styles.title}>Rider Log In</Text>
       <TextInput
         style={styles.input}
-        placeholder="Email"
+        placeholder="Username"
         value={username}
         onChangeText={setUsername}
         autoCapitalize="none"
@@ -88,8 +60,7 @@ const LoginScreen1 = ({ navigation }) => {
       <TouchableOpacity onPress={() => navigation.navigate('CreateAccountScreen')} style={styles.signInLink}>
         <Text style={styles.accountText}>Don't have an account?</Text>
         <Text style={styles.signInText}>Sign up</Text>
-      </TouchableOpacity></>
-       )}
+      </TouchableOpacity>
     </View>
     
 
@@ -189,7 +160,9 @@ const styles = StyleSheet.create({
   signInText: {
     color: '#008955',
     fontSize: 16,
+    alignItems: 'center',
     textAlign: 'center',
+
   },
   accountText:{
     fontSize: 16,
@@ -197,5 +170,5 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LoginScreen1;
+export default RiderLogin;
 

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image ,Alert ,ActivityIndicator } from 'react-native';
+import axios from 'axios';
 
 const CreateAccountScreen = ({ navigation }) => {
   const [name, setName] = useState('');
@@ -8,23 +9,67 @@ const CreateAccountScreen = ({ navigation }) => {
   const [password1, setPassword1] = useState('');
   const [password2, setPassword2] = useState('');
   const [termsChecked, setTermsChecked] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const handleSignup = () => {
-    if (!name || !email || !phone || !password1 ||  !password2 || !termsChecked) {
-      alert('Please fill in all fields and accept terms and conditions');
+  const handleSignup = async () => {
+    console.log('Signup button pressed');
+    if (!name || !email || !phone || !password1 || !password2 || !termsChecked) {
+      Alert.alert('Error', 'Please fill in all fields and accept terms and conditions');
       return;
     }
-    navigation.navigate("LoginScreen1");
-    console.log('Signup button pressed');
-  };
 
+    if (password1 !== password2) {
+      Alert.alert('Error', 'Passwords do not match');
+      return;
+    }
+    console.log(name
+      )
+    
+    try {
+      setLoading(true); 
+      const response = await axios.post('https://weshare-backend-3.onrender.com/register', {
+        name: name,
+        email: email,
+        phone: phone,
+        password: password1,
+      });
+      setLoading(false);
+      if (response.status === 201) {
+        // Registration successful
+        navigation.navigate("LoginScreen1");
+        console.log('Signup successful');
+      }
+      else if(response.status === 400){
+        Alert.alert('Error', 'Email already exists');
+      }
+
+       else {
+        console.log(response);
+        const responseData = response.data;
+        if (responseData && responseData.error) {
+          Alert.alert('Error', responseData.error);
+        } else {
+          Alert.alert('Error', 'Something went wrong . Please try again later.');
+        }
+      }
+    } catch (error) {
+      setLoading(false);
+      console.error('Error:', error);
+      console.log(error.response);
+      Alert.alert('Error', 'Already user? Pls login');
+    }
+  };
   return (
     <View style={styles.container}>
+       {loading ? ( 
+        <ActivityIndicator size="large" color="#008955" />
+      ) : (
+      <>
       <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
         <Text style={styles.backButtonText}>{'< Back'}</Text>
       </TouchableOpacity>
       <View style={{ height: 20 }} />
-      <Text style={styles.title}>Sign up with your email or phone number</Text>
+      <Text style={styles.title}>Create Account</Text>
       <TextInput
         style={styles.input}
         placeholder="Name"
@@ -99,6 +144,8 @@ const CreateAccountScreen = ({ navigation }) => {
         <Text style={styles.accountText}>Already have an account?</Text>
         <Text style={styles.signInText}>Sign in</Text>
       </TouchableOpacity>
+      </>
+      )}
     </View>
   );
 };
@@ -157,7 +204,10 @@ const styles = StyleSheet.create({
   },
   checkboxLabel: {
     fontSize: 16,
-    color:'#008955'
+    color:'#008955',
+    display: 'flex',
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start',
   },
   button: {
     width: '100%',
@@ -219,6 +269,7 @@ const styles = StyleSheet.create({
   signInText: {
     color: '#008955',
     fontSize: 16,
+    textAlign: 'center',
   },
   accountText:{
     fontSize: 16,

@@ -1,36 +1,101 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import React, { useState ,useEffect } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, ActivityIndicator ,Image } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
+import Icon from 'react-native-vector-icons/FontAwesome';
+const GroupScreen = ({ route ,navigation }) => {
+  const { fromlatitude, fromlongitude, tolatitude, tolongitude } = route.params;
+  const [email, setEmail] = useState('');
+  const [groups, setGroups] = useState([]);
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    const getUsername = async () => {
+        try {
+            const userDataString = await AsyncStorage.getItem('userData');
+            if (userDataString !== null) {
+                const userData = JSON.parse(userDataString);
+                setEmail(userData.username);
+            } else {
+                console.log('No user data found in AsyncStorage');
+            }
+        } catch (error) {
+            console.error('Error getting user data from AsyncStorage in preference screen:', error);
+        }
+    };
 
-const GroupScreen = ({ navigation }) => {
-  const [groups] = useState([
-    { id: 1, name: 'Group 1', details: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.', image: require('../asset/auto.png') },
-    { id: 2, name: 'Group 2', details: 'Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.', image: require('../asset/auto.png') },
-    { id: 3, name: 'Group 3', details: 'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.', image: require('../asset/auto.png') }
-  ]);
+    getUsername();
+}, []);
+const fetchGroups = async () => {
+  try {
+    const response = await axios.post('https://weshare-backend-3.onrender.com/find-matching-rides', {
+      email: email,
+      from_latitude: fromlatitude,
+      from_longitude: fromlongitude,
+      to_latitude: tolatitude,
+      to_longitude: tolongitude
+    });
+    console.log(response.data);
+    setGroups(response.data.groups);
+    setLoading(false);
+  } catch (error) {
+    // console.error('Error fetching groups:', error);
+  }
+  finally {
+    setLoading(false);
+  }
+};
+useEffect(() => {
+ 
+  fetchGroups();
+}, [email, fromlatitude, fromlongitude, tolatitude, tolongitude]); 
 
-  const handleGroupClick = (groupId) => {
-    // Handle navigation or any other action
-    console.log(`Clicked on Group ${groupId}`);
-  };
+const handleGroupClick = (groupId, users) => {
+  console.log('Group clicked:', groupId, users);
+  navigation.navigate('GroupSelectionScreen', { groupId,email, users });
+};
 
+const handleRefresh = () => {
+  setLoading(true);
+  fetchGroups();
+};
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-        <Text style={styles.backButtonText}>{'< Back'}</Text>
-      </TouchableOpacity>
-      <Text style={styles.heading}>Available Groups for Ride</Text>
-      {groups.map(group => (
-        <TouchableOpacity key={group.id} onPress={() => handleGroupClick(group.id)}>
-          <View style={styles.group}>
-            <Text style={styles.groupName}>{group.name}</Text>
-            <Text>{group.details}</Text>
-            <Image source={group.image} style={styles.groupImage} />
-            <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('GroupSelectionScreen', { groupId: group.id })}>
+     <View style={styles.top}>
+     <TouchableOpacity onPress={() => navigation.goBack()}style={styles.backButton} >
+    <Text style={styles.backButtonText}>{'Back'}</Text>
+    
+    </TouchableOpacity>
+    <Text style={styles.heading}>Available Groups</Text>
+
+    <TouchableOpacity onPress={handleRefresh}>
+      <Icon name="refresh" size={25} color="#008955" />
+    </TouchableOpacity>
+     </View>
+     
+      {loading ? ( 
+        <View style={styles.containerloaedr}>
+          <ActivityIndicator size="large" color="#008955" />
+          </View>
+      ) : (
+      groups.map(group => (
+          <View style={styles.group} key={group.group_id} >
+           
+            <View style={styles.groupName}> 
+            <Text style={styles.groupName1}>{`Group ${group.group}`}</Text>
+            </View>
+            {group.users.map(user => (
+              <View key={user.email} >
+                <Text style={styles.texte}>{`Email: ${user.email}`}</Text>
+                <Text>{`Preferences: ${user.preferences.join(', ')}`}</Text>
+              </View>
+            ))}
+            <TouchableOpacity style={styles.button} onPress={() => handleGroupClick(group.group_id, group.users)}>
               <Text style={styles.buttonText}>View Group</Text>
             </TouchableOpacity>
           </View>
-        </TouchableOpacity>
-      ))}
+    
+      ))
+    )}
     </View>
   );
 };
@@ -39,33 +104,81 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 10,
-    backgroundColor: 'white',
+    // backgroundColor: 'white',
+  },
+  containerloaedr:{
+   justifyContent: 'center',
+    alignItems: 'center',
+
   },
   backButton: {
     position: 'absolute',
+    display: 'flex',
+    backgroundColor: '#008955',
+    left:13,
     top: 10,
-    left: 10,
+    padding:10,
+    borderRadius: 10,
+    zIndex:9999,
   },
   backButtonText: {
     fontSize: 16,
-    color: 'black',
+    color: 'white',
+    fontWeight: 'bold',
+    marginLeft: 10,
+    marginRight:10
+  },
+  groupName:{
+    fontSize: 20,
+    alignItems: 'center',
+    fontWeight: 'bold',
+    marginBottom: 20,
+    display : 'flex',
+    alignItems: 'center',
+    width: '300',
+    alignSelf: 'center',
+    justifyContent: 'center',
+  },
+  groupName1:{
+    fontSize: 17,
+    alignItems: 'center',
+    alignSelf: 'center',
+    fontWeight: 'bold',
+    display : 'flex',
+    alignItems: 'center',
+    width: '100%',
+    alignSelf: 'center',
+    justifyContent: 'center',
+    color: '#008955',
   },
   heading: {
     fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 20,
     alignSelf: 'flex-start',
-    marginLeft: 10,
-    marginTop: 30, // Adjusted for back button
+    marginLeft: 130,
+    marginTop: 15,
+  },
+  texte:{
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 5,
   },
   group: {
-    padding: 10,
+    padding: 15,
     marginBottom: 20,
     borderWidth: 1,
     borderColor: '#008955',
     borderRadius: 10,
     backgroundColor: '#E2F5ED',
-    position: 'relative', // Make it relative to allow absolute positioning of the image
+    position: 'relative', 
+    shadowColor: 'black',
+    shadowOpacity: 0.5,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 5,
+    elevation: 5,
+    margin:10,
+    display: 'flex',
   },
   groupName: {
     fontSize: 16,
@@ -91,6 +204,13 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: 'bold',
   },
+  top:{
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginRight:15,
+  }
 });
 
 export default GroupScreen;

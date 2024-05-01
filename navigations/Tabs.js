@@ -5,7 +5,7 @@ import ProfileScreen1 from '../screens/ProfileScreen1';
 import FavouriteScreen from '../screens/FavouriteScreen';
 import HistoryScreen from '../screens/HistoryScreen';
 import WalletScreen from '../screens/WalletScreen';
-
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 const Tab = createBottomTabNavigator();
 
@@ -21,8 +21,8 @@ const CustomTabBarButton = ({children,onPress})=>{
     onPress={onPress}
     >
       <View style={{
-        width:70,
-        height:70,
+        width:60,
+        height:60,
         borderRadius:35,
         backgroundColor:'#08B783'
       }}>
@@ -60,15 +60,7 @@ const Tabs = () => {
         tabBarIcon:({focused})=>{
           return(
             <View style={{alignItems:'center',justifyContent:'center'}}>
-              <Image
-              source={require('../asset/icons/housei.png')}
-              resizeMode='contain'
-              style={{
-                width:35,
-                height:35,
-                tintColor:focused ? '#08B783' : 'gray'
-              }}
-              />
+              <Icon name="home" size={30} color={focused ? '#08B783' : 'gray'}/>
               <Text style={{color:focused ? '#08B783' : 'gray',fontSize:12}}>Home</Text>
             </View>
           )
@@ -77,32 +69,14 @@ const Tabs = () => {
          tabBarIcon:({focused})=>{
           return(
             <View style={{alignItems:'center',justifyContent:'center'}}>
-              <Image
-              source={require('../asset/icons/hearti.png')}
-              resizeMode='contain'
-              style={{
-                width:35,
-                height:35,
-                tintColor:focused ? '#08B783' : 'gray'
-              }}
-              />
+              <Icon name="heart" size={30} color={focused ? '#08B783' : 'gray'}/>
               <Text style={{color:focused ? '#08B783' : 'gray',fontSize:12}}>Favourite</Text>
             </View>
           )
         } }} />
         <Tab.Screen name="Wallet" component={WalletScreen} options={{ headerShown: false,
          tabBarIcon:({focused})=>(
-       
-           
-              <Image
-              source={require('../asset/icons/walleti.png')}
-              resizeMode='contain'
-              style={{
-                width:55,
-                height:55,
-                tintColor:'white',
-              }}
-              />
+              <Icon name="money" size={30} color={focused ? 'white' : 'white'}/>
   ),
           tabBarButton:(props)=>(
             <CustomTabBarButton {...props}/>
@@ -112,15 +86,7 @@ const Tabs = () => {
          tabBarIcon:({focused})=>{
           return(
             <View style={{alignItems:'center',justifyContent:'center'}}>
-              <Image
-              source={require('../asset/icons/Timei.png')}
-              resizeMode='contain'
-              style={{
-                width:35,
-                height:35,
-                tintColor:focused ? '#08B783' : 'gray'
-              }}
-              />
+              <Icon name="history" size={30} color={focused ? '#08B783' : 'gray'}/>
               <Text style={{color:focused ? '#08B783' : 'gray',fontSize:12}}>History</Text>
             </View>
           )
@@ -129,15 +95,7 @@ const Tabs = () => {
          tabBarIcon:({focused})=>{
           return(
             <View style={{alignItems:'center',justifyContent:'center'}}>
-              <Image
-              source={require('../asset/icons/useri.png')}
-              resizeMode='contain'
-              style={{
-                width:35,
-                height:35,
-                tintColor:focused ? '#08B783' : 'gray'
-              }}
-              />
+              <Icon name="user" size={30} color={focused ? '#08B783' : 'gray'}/>
               <Text style={{color:focused ? '#08B783' : 'gray',fontSize:12}}>Profile</Text>
             </View>
           )

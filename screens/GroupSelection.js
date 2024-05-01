@@ -1,36 +1,82 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet ,ActivityIndicator } from 'react-native';
+import axios from 'axios';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
-const GroupSelectionScreen = ({ navigation }) => {
+const GroupSelectionScreen = ({ navigation ,route}) => {
+  const { groupId, email, users } = route.params;
+  const [loading, setLoading] = useState(false);
+  const [heartColor, setHeartColor] = useState('black');
+  const [buttonClicked, setButtonClicked] = useState(false);
+
   const [specifications] = useState([
     { id: 1, label: 'Year', value: '2024' },
     { id: 2, label: 'Seat', value: '4' },
     { id: 3, label: 'Distance', value: '20 km' }
   ]);
 
-  const [groupMembers] = useState([
-    { id: 1, name: 'Member 1' },
-    { id: 2, name: 'Member 2' },
-    { id: 3, name: 'Member 3' }
-  ]);
+  const handelAccept = async () => {
+    setLoading(true);
+    const usersData = users.map(({ email }) => ({ email, status: 'pending', role: 'M' }));
+
+    const groupData = {
+      group_id: groupId,
+      users: [
+        { email, status: 'approved', role: 'L' },
+        ...usersData
+      ]
+    };
   
-  const handelAccept = () => {
-    navigation.navigate('ThankyouScreen');
+    console.log('Group Data:', groupData);
+    try {
+      const response = await axios.post('https://weshare-backend-3.onrender.com/create-group', groupData);
+
+      console.log(response.data.message);
+      navigation.navigate('WaitingScreen',{
+        groupId: groupId
+      });
+    } catch (error) {
+      console.error('Error creating group:', error);
+    }finally {
+      setLoading(false);
+    }
+  };
+
+  const handleHeartClick = async () => {
+    if (!buttonClicked) {
+      setButtonClicked(true);
+      setHeartColor('red'); 
+      setLoading(true);
+      try {
+        const response = await axios.post('https://weshare-backend-3.onrender.com/add-favorite-group', {
+          user: email,
+          member1: users[0].email,
+          member2: users[1].email
+        });
+
+        console.log(response.data.message);
+      } catch (error) {
+        console.error('Error adding favorite group:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
   };
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-        <Text style={styles.backButtonText}>{'< Back'}</Text>
-      </TouchableOpacity>
+      <View style={styles.top}>
       <Text style={styles.heading}>VIEW GROUP</Text>
+      <TouchableOpacity style={styles.icon}  onPress={handleHeartClick} disabled={buttonClicked}>
+          <Icon name="heart" size={25} color={heartColor} style={styles.heart} />
+        </TouchableOpacity>
+      </View>
 
-      {/* Padding */}
+     
       <View style={styles.padding} />
 
-      {/* Specification Heading */}
+  
       <Text style={styles.sectionTitle}>Specification</Text>
 
-      {/* Specifications */}
       <View style={styles.specContainer}>
         {specifications.map(spec => (
           <View key={spec.id} style={styles.specItem}>
@@ -40,22 +86,24 @@ const GroupSelectionScreen = ({ navigation }) => {
         ))}
       </View>
 
-      {/* Group Members Heading */}
       <Text style={styles.sectionTitle}>Group Members</Text>
 
-      {/* Group Members */}
       <View style={styles.section}>
-        {groupMembers.map(member => (
-          <View key={member.id} style={styles.memberBox}>
-            <Text style={styles.memberText}>{member.name}</Text>
+          <View style={styles.memberBox}>
+            <Text style={styles.memberText}>{email}</Text>
+          </View>
+         {users.map((user, index) => (
+          <View key={index} style={styles.memberBox}>
+            <Text style={styles.memberText}>{user.email}</Text>
           </View>
         ))}
       </View>
+      {loading && <ActivityIndicator style={styles.loader} size="large" color="#008000" />}
 
       {/* Buttons */}
       <View style={styles.buttonContainer}>
-        <TouchableOpacity style={[styles.button, styles.declineButton]}>
-          <Text style={styles.buttonText}>Decline</Text>
+        <TouchableOpacity style={[styles.button, styles.declineButton]}onPress={() => navigation.goBack()}>
+          <Text style={styles.buttonText}>Back</Text>
         </TouchableOpacity>
         <TouchableOpacity style={[styles.button, styles.acceptButton]} onPress={handelAccept}>
           <Text style={styles.buttonText}>Accept</Text>
@@ -70,6 +118,25 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 10,
     backgroundColor: 'white',
+  },
+  top:{
+    zIndex:9999,
+    flexDirection:'row',
+    justifyContent:'center',
+    alignItems:'center',
+    padding:10,
+    backgroundColor:'white',
+  },
+  icon:{
+    padding:10,
+    borderRadius:50,
+    marginLeft:10,
+  
+  },
+  heart:{
+  borderColor: 'black',
+  backgroundColor: 'white',
+  // color: 'black',
   },
   backButton: {
     marginBottom: 10,
@@ -128,22 +195,23 @@ const styles = StyleSheet.create({
   },
   button: {
     flex: 1,
-    padding: 15,
+    padding: 10,
     borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
   },
   declineButton: {
     marginRight: 5,
-    backgroundColor: '#FF6347', // Tomato color
+    backgroundColor: '#FF6347',
   },
   acceptButton: {
     marginLeft: 5,
-    backgroundColor: '#008000', // Green color
+    backgroundColor: '#008000', 
   },
   buttonText: {
     color: 'white',
     fontWeight: 'bold',
+    fontSize: 18,
   },
 });
 
