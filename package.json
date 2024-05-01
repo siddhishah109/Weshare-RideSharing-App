@@ -29,6 +29,7 @@
     "react-native-screens": "^3.29.0",
     "react-native-vector-icons": "^10.0.3",
     "react-native-webview": "^13.8.6",
+    "socket.io-client": "^4.7.5",
     "toggle-switch-react-native": "^3.3.0"
   },
   "devDependencies": {

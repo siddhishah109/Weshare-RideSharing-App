@@ -18,6 +18,7 @@ import RiderLogin from './screens/RiderLogin';
 import RiderScreen from './screens/RiderScreen';
 import RideMapScreen from './screens/RideMapScreen';
 import PreferenceScreen from './screens/PreferenceScreen';
+import WaitingScreen from './screens/WaitingScreen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 const Stack = createNativeStackNavigator();
  
@@ -36,6 +37,7 @@ export default function App() {
         setIsAuthenticated(true);
         setLoading(false);
         console.log('User is authenticated');
+        console.log('User data:', userData);
       }
       else{
         setIsAuthenticated(false);
@@ -74,6 +76,7 @@ export default function App() {
             <Stack.Screen name="RideMapScreen" component={RideMapScreen} options={{ headerShown: false }}/>       
             <Stack.Screen name="PreferenceScreen" component={PreferenceScreen} options={{headerShown: false }}/>
             <Stack.Screen name="RiderScreen" component={RiderScreen} options={{ header: (props) => <TopAppBar {...props} />}}/>
+            <Stack.Screen name="WaitingScreen" component={WaitingScreen} options={{ headerShown: false }}/>
           </>
         ) : (
           <>
@@ -88,6 +91,7 @@ export default function App() {
             <Stack.Screen name="RideMapScreen" component={RideMapScreen} options={{ headerShown: false }}/>       
             <Stack.Screen name="PreferenceScreen" component={PreferenceScreen} options={{headerShown: false }}/>
             <Stack.Screen name="RiderScreen" component={RiderScreen} options={{ header: (props) => <TopAppBar {...props} />}}/>
+            <Stack.Screen name="WaitingScreen" component={WaitingScreen} options={{ headerShown: false }}/>
           </>
         )}
       </Stack.Navigator>

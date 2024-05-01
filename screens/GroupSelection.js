@@ -1,23 +1,52 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet ,ActivityIndicator } from 'react-native';
+import axios from 'axios';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const GroupSelectionScreen = ({ navigation ,route}) => {
-  const { groupId,email, users } = route.params;
+  const { groupId, email, users } = route.params;
+  const [loading, setLoading] = useState(false);
   const [specifications] = useState([
     { id: 1, label: 'Year', value: '2024' },
     { id: 2, label: 'Seat', value: '4' },
     { id: 3, label: 'Distance', value: '20 km' }
   ]);
 
-  const handelAccept = () => {
-    navigation.navigate('ThankyouScreen');
+  const handelAccept = async () => {
+    setLoading(true);
+    const usersData = users.map(({ email }) => ({ email, status: 'pending', role: 'M' }));
+
+    const groupData = {
+      group_id: groupId,
+      users: [
+        { email, status: 'approved', role: 'L' },
+        ...usersData
+      ]
+    };
+  
+    console.log('Group Data:', groupData);
+    try {
+      const response = await axios.post('https://weshare-backend-3.onrender.com/create-group', groupData);
+
+      console.log(response.data.message);
+      navigation.navigate('WaitingScreen',{
+        groupId: groupId
+      });
+    } catch (error) {
+      console.error('Error creating group:', error);
+    }finally {
+      setLoading(false);
+    }
   };
   return (
     <View style={styles.container}>
-      {/* <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-        <Text style={styles.backButtonText}>{'< Back'}</Text>
-      </TouchableOpacity> */}
+      <View style={styles.top}>
       <Text style={styles.heading}>VIEW GROUP</Text>
+      <TouchableOpacity style={styles.icon}>
+        <Icon name="heart" size={30} color="red" style={styles.heart} />
+      </TouchableOpacity>
+      </View>
 
      
       <View style={styles.padding} />
@@ -46,6 +75,7 @@ const GroupSelectionScreen = ({ navigation ,route}) => {
           </View>
         ))}
       </View>
+      {loading && <ActivityIndicator style={styles.loader} size="large" color="#008000" />}
 
       {/* Buttons */}
       <View style={styles.buttonContainer}>
@@ -65,6 +95,26 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 10,
     backgroundColor: 'white',
+  },
+  top:{
+    zIndex:9999,
+    flexDirection:'row',
+    justifyContent:'center',
+    alignItems:'center',
+    padding:10,
+    backgroundColor:'white',
+  },
+  icon:{
+    padding:10,
+    borderRadius:50,
+    marginLeft:10,
+  
+  },
+  heart:{
+  borderColor: 'black',
+  borderWidth: '1px',
+  backgroundColor: 'white',
+  color: 'black',
   },
   backButton: {
     marginBottom: 10,
@@ -130,11 +180,11 @@ const styles = StyleSheet.create({
   },
   declineButton: {
     marginRight: 5,
-    backgroundColor: '#FF6347', // Tomato color
+    backgroundColor: '#FF6347',
   },
   acceptButton: {
     marginLeft: 5,
-    backgroundColor: '#008000', // Green color
+    backgroundColor: '#008000', 
   },
   buttonText: {
     color: 'white',

@@ -77,7 +77,7 @@ const handleGroupClick = (groupId, users) => {
                 <Text>{`Preferences: ${user.preferences.join(', ')}`}</Text>
               </View>
             ))}
-            <TouchableOpacity style={styles.button} onPress={() => handleGroupClick(group.group, group.users)}>
+            <TouchableOpacity style={styles.button} onPress={() => handleGroupClick(group.group_id, group.users)}>
               <Text style={styles.buttonText}>View Group</Text>
             </TouchableOpacity>
           </View>
