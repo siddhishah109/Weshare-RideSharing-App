@@ -33,7 +33,7 @@ const FavouriteScreen = () => {
           user: email
         });
         setFavoriteGroups(response.data.favorite_groups);
-        console.log('Favorite Groups:', response.data.favorite_groups);
+        // console.log('Favorite Groups:', response.data.favorite_groups);
         setLoading(false);
       } catch (error) {
         console.error('Error fetching favorite groups:', error);

@@ -2,6 +2,7 @@ import React, { useState ,useEffect} from 'react';
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import {  View, Text,ActivityIndicator ,Alert } from 'react-native';
+import { TransitionPresets } from '@react-navigation/stack';
 import OnboardingScreen from "./screens/OnboardingScreen";
 import LoginScreen1 from "./screens/LoginScreen1";
 import LoginScreen from './screens/LoginScreen';
